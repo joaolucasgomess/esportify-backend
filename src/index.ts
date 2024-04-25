@@ -101,7 +101,6 @@ app.get('/quadra', async (req: Request, res: Response) => {
         'q.id_quadra', 
         'q.nome',  
         db.raw(`
-        JSON_BUILD_ARRAY(
           JSON_BUILD_OBJECT(
             'id_endereco', e.id_endereco,
             'rua', e.rua,
@@ -109,8 +108,7 @@ app.get('/quadra', async (req: Request, res: Response) => {
             'cidade', e.cidade,
             'numero', e.numero,
             'cep', e.cep
-          )
-        ) as endereco`)
+          )as endereco`)
       )
       .join('endereco as e', 'q.id_endereco', 'e.id_endereco')
 
@@ -134,7 +132,6 @@ app.get('/quadra/:id_quadra', async (req: Request, res: Response) => {
         'q.id_quadra', 
         'q.nome',  
         db.raw(`
-        JSON_BUILD_ARRAY(
           JSON_BUILD_OBJECT(
             'id_endereco', e.id_endereco,
             'rua', e.rua,
@@ -142,8 +139,7 @@ app.get('/quadra/:id_quadra', async (req: Request, res: Response) => {
             'cidade', e.cidade,
             'numero', e.numero,
             'cep', e.cep
-          )
-        ) as endereco`)
+          ) as endereco`)
       )
       .join('endereco as e', 'q.id_endereco', 'e.id_endereco')
       .where({ id_quadra: id_quadra })
@@ -174,10 +170,25 @@ app.get('/dias_semana', async (req: Request, res: Response) => {
   }
 })
 
-app.get('/horarios_aluguel', async (req: Request, res: Response) => {
+app.get('/horarios_aluguel/:id_quadra', async (req: Request, res: Response) => {
   try{
 
-    const horarios_aluguel = await db('horario_aluguel')
+    const { id_quadra } = req.params
+    const horarios_aluguel = await db('horario_aluguel as h')
+      .select(
+        'h.id_horario_aluguel',
+        'h.horario_inicial',
+        'h.horario_final',
+        'h.preco',
+        db.raw(`
+          JSON_BUILD_OBJECT(
+            'id_dia_semana', d.id_dia_semana,
+            'desc_dia', d.desc_dia
+          ) as dia_semana`
+        )
+      )
+      .join('dia_semana as d', 'h.id_dia_semana', 'd.id_dia_semana')
+      .where('h.id_quadra', id_quadra)
 
     if(!horarios_aluguel){
       throw new Error('Horarios não encontrados')
