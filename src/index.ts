@@ -20,6 +20,7 @@ app.get('/', async (req: Request, res: Response) => {
 
 app.post('/quadra/add/', async (req: Request, res: Response) => {
   try{
+
     const { nome, rua, bairro, cidade, numero, cep, locatario } = req.body
 
     if(!nome || !rua || !bairro || !cidade || !numero || !cep || !locatario){
@@ -55,6 +56,7 @@ app.post('/quadra/add/', async (req: Request, res: Response) => {
 
 app.post('/horario/add', async (req: Request, res: Response) => {
   try{
+
     const { id_quadra, id_dia_semana, horario_inicial, horario_final, preco } = req.body
 
     if(!id_quadra || !id_dia_semana || !horario_inicial || !horario_final || !preco){
@@ -86,6 +88,103 @@ app.post('/horario/add', async (req: Request, res: Response) => {
       })
 
       res.status(201).send('Horario criado com sucesso!')
+  }catch(err: any){
+    res.status(400).send(err.message)
+  }
+})
+
+app.get('/quadra', async (req: Request, res: Response) => {
+  try{
+
+    const quadras = await db('quadra as q')
+      .select(
+        'q.id_quadra', 
+        'q.nome',  
+        db.raw(`
+        JSON_BUILD_ARRAY(
+          JSON_BUILD_OBJECT(
+            'id_endereco', e.id_endereco,
+            'rua', e.rua,
+            'bairro', e.bairro,
+            'cidade', e.cidade,
+            'numero', e.numero,
+            'cep', e.cep
+          )
+        ) as endereco`)
+      )
+      .join('endereco as e', 'q.id_endereco', 'e.id_endereco')
+
+    if(!quadras.length){
+      throw new Error('Nenhuma quadra cadastrada')
+    }
+
+    res.status(200).send({ quadras: quadras })
+  }catch(err: any){
+    res.status(400).send(err.message)
+  }
+})
+
+app.get('/quadra/:id_quadra', async (req: Request, res: Response) => {
+  try{
+
+    const { id_quadra } = req.params
+
+    const quadra = await db('quadra as q')
+      .select(
+        'q.id_quadra', 
+        'q.nome',  
+        db.raw(`
+        JSON_BUILD_ARRAY(
+          JSON_BUILD_OBJECT(
+            'id_endereco', e.id_endereco,
+            'rua', e.rua,
+            'bairro', e.bairro,
+            'cidade', e.cidade,
+            'numero', e.numero,
+            'cep', e.cep
+          )
+        ) as endereco`)
+      )
+      .join('endereco as e', 'q.id_endereco', 'e.id_endereco')
+      .where({ id_quadra: id_quadra })
+
+    if(!quadra.length){
+      throw new Error('Quadra não encontrado')
+    }
+
+    res.status(200).send({ quadra: quadra })
+  }catch(err: any){
+    res.status(400).send(err.message)
+  }
+})
+
+app.get('/dias_semana', async (req: Request, res: Response) => {
+  try{
+
+    const dias_semana = await db('dia_semana')
+
+    if(!dias_semana){
+      throw new Error('Dias da semana não encontrados')
+    }
+
+    res.status(200).send({ dias_da_semana : dias_semana })
+
+  }catch(err: any){
+    res.status(400).send(err.message)
+  }
+})
+
+app.get('/horarios_aluguel', async (req: Request, res: Response) => {
+  try{
+
+    const horarios_aluguel = await db('horario_aluguel')
+
+    if(!horarios_aluguel){
+      throw new Error('Horarios não encontrados')
+    }
+
+    res.status(200).send({ horarios_aluguel : horarios_aluguel })
+
   }catch(err: any){
     res.status(400).send(err.message)
   }
