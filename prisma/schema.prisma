@@ -1,0 +1,127 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+model Usuario {
+  id            String          @id @db.VarChar
+  email         String          @unique @db.VarChar
+  senha         String          @db.VarChar
+  nome          String          @db.VarChar
+  criado_em     DateTime        @default(now())
+  modificado_em DateTime        @updatedAt
+  Adiministador Adiministador[]
+  Cliente       Cliente[]
+
+  @@map("usuario")
+}
+
+model Cliente {
+  id            String        @id @db.VarChar
+  telefone      String        @unique @db.VarChar
+  criado_em     DateTime      @default(now())
+  modificado_em DateTime      @updatedAt
+  id_usuario    String        @db.VarChar
+  usuario       Usuario       @relation(fields: [id_usuario], references: [id])
+  DataAluguel   DataAluguel[]
+
+  @@map("cliente")
+}
+
+model Adiministador {
+  id            String   @id @db.VarChar
+  criado_em     DateTime @default(now())
+  modificado_em DateTime @updatedAt
+  id_usuario    String   @db.VarChar
+  usuario       Usuario  @relation(fields: [id_usuario], references: [id])
+
+  @@map("adiministador")
+}
+
+model DiaSemana {
+  id              String           @id @db.VarChar
+  desc_dia        String           @db.VarChar
+  horario_aluguel HorarioAluguel[]
+
+  @@map("dia_semana")
+}
+
+model ComplexoEsportivo {
+  id            String   @id @db.VarChar
+  nome          String   @db.VarChar
+  cnpj          String   @unique @db.VarChar
+  rua           String   @db.VarChar
+  bairro        String   @db.VarChar
+  cidade        String   @db.VarChar
+  numero        Int
+  cep           String   @db.VarChar
+  criado_em     DateTime @default(now())
+  modificado_em DateTime @updatedAt
+  Quadra        Quadra[]
+
+  @@map("complexo_esportivo")
+}
+
+model Quadra {
+  id                    String            @id @db.VarChar
+  nome                  String            @db.VarChar
+  status                Status            @default(ATIVO)
+  criado_em             DateTime          @default(now())
+  modificado_em         DateTime          @updatedAt
+  id_complexo_esportivo String            @db.VarChar
+  complexo_esportivo    ComplexoEsportivo @relation(fields: [id_complexo_esportivo], references: [id])
+  HorarioAluguel        HorarioAluguel[]
+
+  @@map("quadra")
+}
+
+model HorarioAluguel {
+  id              String        @id @db.VarChar
+  horario_inicial DateTime      @db.Time(6)
+  horario_final   DateTime      @db.Time(6)
+  preco           Float
+  status          Status        @default(ATIVO)
+  criado_em       DateTime      @default(now())
+  modificado_em   DateTime      @updatedAt
+  id_dia_semana   String        @db.VarChar
+  id_quadra       String        @db.VarChar
+  quadra          Quadra        @relation(fields: [id_quadra], references: [id])
+  dia_semana      DiaSemana     @relation(fields: [id_dia_semana], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  data_aluguel    DataAluguel[]
+
+  @@map("horario_aluguel")
+}
+
+model DataAluguel {
+  id                 String         @id @db.VarChar
+  data               DateTime       @db.Date
+  criado_em          DateTime       @default(now())
+  modificado_em      DateTime       @updatedAt
+  id_horario_aluguel String         @db.VarChar
+  id_cliente         String         @db.VarChar
+  cliente            Cliente        @relation(fields: [id_cliente], references: [id])
+  horario_aluguel    HorarioAluguel @relation(fields: [id_horario_aluguel], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("data_aluguel")
+}
+
+model Avalicao {
+  id                String   @id @db.VarChar
+  id_avaliador      String   @db.VarChar
+  id_avaliado       String   @db.VarChar
+  avaliacao         Int
+  avaliacao_escrita String
+  criado_em         DateTime @default(now())
+  modificado_em     DateTime @updatedAt
+
+  @@map("avalicao")
+}
+
+enum Status {
+  ATIVO
+  INATIVO
+}

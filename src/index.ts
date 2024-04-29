@@ -2,10 +2,11 @@ import 'dotenv/config'
 import express, { Request, Response } from 'express'
 import cors from 'cors'
 import { AddressInfo } from 'net'
-import db from './connection'
+import { PrismaClient } from '@prisma/client'
 import { uuidv7 } from 'uuidv7'
 
 const app = express()
+const prisma = new PrismaClient()
 
 app.use(express.json())
 app.use(cors())
@@ -21,32 +22,14 @@ app.get('/', async (req: Request, res: Response) => {
 app.post('/quadra/add/', async (req: Request, res: Response) => {
   try{
 
-    const { nome, rua, bairro, cidade, numero, cep, locatario } = req.body
+    const { cnpj, nome, rua, bairro, cidade, numero, cep } = req.body
 
-    if(!nome || !rua || !bairro || !cidade || !numero || !cep || !locatario){
+    if(!cnpj || !nome || !rua || !bairro || !cidade || !numero || !cep){
       throw new Error('Campos inválidos')
     }
 
-    const id_quadra = uuidv7() as string
-    const id_endereco = uuidv7() as string
+    //TODO
 
-    await db.transaction(async (trx) => {
-      await trx('endereco')
-        .insert({
-          id_endereco,
-          rua,
-          bairro,
-          cidade,
-          numero,
-          cep
-        })
-      await trx('quadra')
-        .insert({
-          id_quadra,
-          nome,
-          id_endereco
-        })
-    })
 
     res.status(201).send('Quadra criada com sucesso')
   }catch(err: any){
@@ -54,7 +37,7 @@ app.post('/quadra/add/', async (req: Request, res: Response) => {
   } 
 })
 
-app.post('/horario/add', async (req: Request, res: Response) => {
+/*app.post('/horario/add', async (req: Request, res: Response) => {
   try{
 
     const { id_quadra, id_dia_semana, horario_inicial, horario_final, preco } = req.body
@@ -91,30 +74,16 @@ app.post('/horario/add', async (req: Request, res: Response) => {
   }catch(err: any){
     res.status(400).send(err.message)
   }
-})
+})*/
 
 app.get('/quadra', async (req: Request, res: Response) => {
   try{
 
-    const quadras = await db('quadra as q')
-      .select(
-        'q.id_quadra', 
-        'q.nome',  
-        db.raw(`
-          JSON_BUILD_OBJECT(
-            'id_endereco', e.id_endereco,
-            'rua', e.rua,
-            'bairro', e.bairro,
-            'cidade', e.cidade,
-            'numero', e.numero,
-            'cep', e.cep
-          )as endereco`)
-      )
-      .join('endereco as e', 'q.id_endereco', 'e.id_endereco')
-
-    if(!quadras.length){
-      throw new Error('Nenhuma quadra cadastrada')
-    }
+    const quadras = await prisma.quadra.findMany({
+      include: {
+        complexo_esportivo: true
+      }
+    })
 
     res.status(200).send({ quadras: quadras })
   }catch(err: any){
@@ -122,7 +91,7 @@ app.get('/quadra', async (req: Request, res: Response) => {
   }
 })
 
-app.get('/quadra/:id_quadra', async (req: Request, res: Response) => {
+/*app.get('/quadra/:id_quadra', async (req: Request, res: Response) => {
   try{
 
     const { id_quadra } = req.params
@@ -199,7 +168,7 @@ app.get('/horarios_aluguel/:id_quadra', async (req: Request, res: Response) => {
   }catch(err: any){
     res.status(400).send(err.message)
   }
-})
+})*/
 
 const server = app.listen(process.env.PORT || 3003, () => {
   if (server) {
