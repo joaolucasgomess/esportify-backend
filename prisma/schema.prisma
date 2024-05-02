@@ -1,4 +1,4 @@
-generator client {
+generator gen {
   provider = "prisma-client-js"
 }
 
@@ -33,11 +33,13 @@ model Cliente {
 }
 
 model Adiministador {
-  id            String   @id @db.VarChar
-  criado_em     DateTime @default(now())
-  modificado_em DateTime @updatedAt
-  id_usuario    String   @db.VarChar
-  usuario       Usuario  @relation(fields: [id_usuario], references: [id])
+  id                    String            @id @db.VarChar
+  criado_em             DateTime          @default(now())
+  modificado_em         DateTime          @updatedAt
+  id_usuario            String            @db.VarChar
+  id_complexo_esportivo String            @db.VarChar
+  usuario               Usuario           @relation(fields: [id_usuario], references: [id])
+  complexo_esportivo    ComplexoEsportivo @relation(fields: [id_complexo_esportivo], references: [id])
 
   @@map("adiministador")
 }
@@ -51,17 +53,18 @@ model DiaSemana {
 }
 
 model ComplexoEsportivo {
-  id            String   @id @db.VarChar
-  nome          String   @db.VarChar
-  cnpj          String   @unique @db.VarChar
-  rua           String   @db.VarChar
-  bairro        String   @db.VarChar
-  cidade        String   @db.VarChar
+  id            String          @id @db.VarChar
+  nome          String          @db.VarChar
+  cnpj          String          @unique @db.VarChar
+  rua           String          @db.VarChar
+  bairro        String          @db.VarChar
+  cidade        String          @db.VarChar
   numero        Int
-  cep           String   @db.VarChar
-  criado_em     DateTime @default(now())
-  modificado_em DateTime @updatedAt
+  cep           String          @db.VarChar
+  criado_em     DateTime        @default(now())
+  modificado_em DateTime        @updatedAt
   Quadra        Quadra[]
+  Adiministador Adiministador[]
 
   @@map("complexo_esportivo")
 }
@@ -121,7 +124,23 @@ model Avalicao {
   @@map("avalicao")
 }
 
+model CnpjValido {
+  id            String     @id @db.VarChar
+  cnpj          String     @unique @db.VarChar
+  status        Status     @default(ATIVO)
+  cadastrado    Cadastrado @default(NAO)
+  criado_em     DateTime   @default(now())
+  modificado_em DateTime   @updatedAt
+
+  @@map("cnpj_valido")
+}
+
 enum Status {
   ATIVO
   INATIVO
+}
+
+enum Cadastrado {
+  SIM
+  NAO
 }

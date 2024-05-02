@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "ts-node-dev ./src/index.ts",
     "start": "tsc && node ./build/index.js",
-    "build": "tsc"
+    "build": "tsc",
+    "seed": "ts-node prisma/seeders/seed.ts"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +24,7 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.11.5",
+    "prisma-class-generator": "^0.2.9",
     "uuidv7": "^0.6.3"
   },
   "devDependencies": {

@@ -2,11 +2,10 @@ import 'dotenv/config'
 import express, { Request, Response } from 'express'
 import cors from 'cors'
 import { AddressInfo } from 'net'
-import { PrismaClient } from '@prisma/client'
-import { uuidv7 } from 'uuidv7'
+import { sportsComplexRouter } from './routes/sportsComplexRouter'
+import { adminRouter } from './routes/adminRouter'
 
 const app = express()
-const prisma = new PrismaClient()
 
 app.use(express.json())
 app.use(cors())
@@ -19,7 +18,10 @@ app.get('/', async (req: Request, res: Response) => {
   }
 })
 
-app.post('/quadra/add/', async (req: Request, res: Response) => {
+app.use('/sportsComplex/', sportsComplexRouter)
+app.use('/admin/', adminRouter)
+
+/*app.post('/quadra/add/', async (req: Request, res: Response) => {
   try{
 
     const { cnpj, nome, rua, bairro, cidade, numero, cep } = req.body
@@ -35,7 +37,7 @@ app.post('/quadra/add/', async (req: Request, res: Response) => {
   }catch(err: any){
     res.status(400).send(err.message)
   } 
-})
+})*/
 
 /*app.post('/horario/add', async (req: Request, res: Response) => {
   try{
@@ -76,7 +78,7 @@ app.post('/quadra/add/', async (req: Request, res: Response) => {
   }
 })*/
 
-app.get('/quadra', async (req: Request, res: Response) => {
+/*app.get('/quadra', async (req: Request, res: Response) => {
   try{
 
     const quadras = await prisma.quadra.findMany({
@@ -89,7 +91,7 @@ app.get('/quadra', async (req: Request, res: Response) => {
   }catch(err: any){
     res.status(400).send(err.message)
   }
-})
+})*/
 
 /*app.get('/quadra/:id_quadra', async (req: Request, res: Response) => {
   try{
