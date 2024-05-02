@@ -10,7 +10,7 @@ export class AdminController {
             const token = await this.adminBusiness.addAdmin({ email, senha, nome, id_complexo_esportivo })
             res.status(201).send({ token })
         }catch(err: any){
-            res.status(err.statusCode || 400).send(err.message)
+            res.status(err.statusCode || 400).send({ error: err.message })
         }
     }
 }

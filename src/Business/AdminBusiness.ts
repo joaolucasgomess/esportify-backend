@@ -26,9 +26,8 @@ export class AdminBusiness {
             }   
 
             const adminByEmail = await this.adminData.selectAdminByEmail(email)
-            console.log(adminByEmail)
 
-            if(!adminByEmail){
+            if(adminByEmail){
                 throw new CustomError('Email informado já cadastrado em nossa base', 422)
             }
 
@@ -40,7 +39,7 @@ export class AdminBusiness {
             return token
 
         }catch(err: any){
-            throw new CustomError(err.statusCode, err.message)
+            throw new CustomError(err.message, err.statusCode)
         }
     }
 }

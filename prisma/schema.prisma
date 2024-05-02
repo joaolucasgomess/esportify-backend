@@ -14,7 +14,7 @@ model Usuario {
   nome          String          @db.VarChar
   criado_em     DateTime        @default(now())
   modificado_em DateTime        @updatedAt
-  Adiministador Adiministador[]
+  Adiministador Administrador[]
   Cliente       Cliente[]
 
   @@map("usuario")
@@ -32,7 +32,7 @@ model Cliente {
   @@map("cliente")
 }
 
-model Adiministador {
+model Administrador {
   id                    String            @id @db.VarChar
   criado_em             DateTime          @default(now())
   modificado_em         DateTime          @updatedAt
@@ -41,7 +41,7 @@ model Adiministador {
   usuario               Usuario           @relation(fields: [id_usuario], references: [id])
   complexo_esportivo    ComplexoEsportivo @relation(fields: [id_complexo_esportivo], references: [id])
 
-  @@map("adiministador")
+  @@map("administrador")
 }
 
 model DiaSemana {
@@ -64,7 +64,7 @@ model ComplexoEsportivo {
   criado_em     DateTime        @default(now())
   modificado_em DateTime        @updatedAt
   Quadra        Quadra[]
-  Adiministador Adiministador[]
+  Adiministador Administrador[]
 
   @@map("complexo_esportivo")
 }
