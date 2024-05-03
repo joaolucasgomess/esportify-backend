@@ -1,7 +1,7 @@
-import { Administrador, Usuario } from '@prisma/client'
+import { Administrador } from '@prisma/client'
 import { TypeCreateAdmin } from '../types/TypeCreateAdmin'
 
 export interface IAdminData {
-    selectAdminByEmail(email: string):Promise<Usuario>
+    selectAdminByEmail(email: string):Promise<any>
     insertAdmin(id: string, newAdmin: TypeCreateAdmin): Promise<Administrador>
 }

@@ -1,5 +1,6 @@
 generator gen {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["relationJoins"]
 }
 
 datasource db {
@@ -21,13 +22,14 @@ model Usuario {
 }
 
 model Cliente {
-  id            String        @id @db.VarChar
-  telefone      String        @unique @db.VarChar
-  criado_em     DateTime      @default(now())
-  modificado_em DateTime      @updatedAt
-  id_usuario    String        @db.VarChar
-  usuario       Usuario       @relation(fields: [id_usuario], references: [id])
-  DataAluguel   DataAluguel[]
+  id              String        @id @db.VarChar
+  telefone        String        @unique @db.VarChar
+  data_nascimento DateTime      @db.Date
+  criado_em       DateTime      @default(now())
+  modificado_em   DateTime      @updatedAt
+  id_usuario      String        @db.VarChar
+  usuario         Usuario       @relation(fields: [id_usuario], references: [id])
+  DataAluguel     DataAluguel[]
 
   @@map("cliente")
 }

@@ -14,10 +14,8 @@ export class SportsComplexBusiness {
 
     addSportsComplexBusiness = async(newSportsComplex: TypeCreateSportsComplex): Promise<ComplexoEsportivo> => {
         try{
-            
-            const { cnpj, nome, rua, bairro, cidade, numero, cep } = newSportsComplex
 
-            if(!cnpj || !nome || !rua || !bairro || !cidade || !numero || !cep){
+            if(verifyFieldsToObject(newSportsComplex) === false){
                 throw new CustomError('Campos inválidos', 422)
             }
 

@@ -4,6 +4,8 @@ import cors from 'cors'
 import { AddressInfo } from 'net'
 import { sportsComplexRouter } from './routes/sportsComplexRouter'
 import { adminRouter } from './routes/adminRouter'
+import { playerRouter } from './routes/playerRouter'
+import { courtRouter } from './routes/courtRouter'
 
 const app = express()
 
@@ -18,8 +20,10 @@ app.get('/', async (req: Request, res: Response) => {
   }
 })
 
-app.use('/sportsComplex/', sportsComplexRouter)
-app.use('/admin/', adminRouter)
+app.use('/ComplexoEsportivo/', sportsComplexRouter)
+app.use('/Administrador/', adminRouter)
+app.use('/Jogador/', playerRouter)
+app.use('/Quadra/', courtRouter)
 
 /*app.post('/quadra/add/', async (req: Request, res: Response) => {
   try{

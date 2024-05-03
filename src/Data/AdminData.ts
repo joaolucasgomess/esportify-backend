@@ -1,17 +1,21 @@
 import { IAdminData } from '../model/InterfaceAdminData'
 import { TypeCreateAdmin } from '../types/TypeCreateAdmin'
-import { PrismaClient, Administrador, Usuario } from '@prisma/client'
+import { PrismaClient, Administrador } from '@prisma/client'
 
 export default class AdminData implements IAdminData {
     prisma = new PrismaClient()
 
-    selectAdminByEmail = async (email: string): Promise<Usuario> => {
+    selectAdminByEmail = async (email: string): Promise<any> => {
         try{
-            const admin = await this.prisma.usuario.findUniqueOrThrow({
-                where: {
-                    email: email
-                }
-            })
+            const result: any[] = await this.prisma.$queryRaw`
+                SELECT 
+                    * 
+                FROM 
+                Administrador AS A
+                JOIN Usuario AS U USING(id)
+                WHERE U.email = ${email} 
+            `
+            const admin = result[0]
             return admin
         }catch(err: any){
             throw new Error(err.slqMessage || err.message)
