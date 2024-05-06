@@ -35,7 +35,7 @@ export class AdminBusiness {
             const hashedPassword = await this.hashManager.hash(newAdmin.senha)
             newAdmin.senha = hashedPassword
             await this.adminData.insertAdmin(id, newAdmin)
-            const token = this.authenticator.generateToken({ id })
+            const token = this.authenticator.generateToken({ id: id, idSportsComplex: newAdmin.id_complexo_esportivo })
             return token
 
         }catch(err: any){

@@ -25,5 +25,6 @@ export class Authenticator {
 }
 
 export interface AuthenticationData {
-    id: string
+    id: string,
+    idSportsComplex?: string
 }
