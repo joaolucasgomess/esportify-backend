@@ -66,7 +66,7 @@ export class AdminBusiness {
                 throw new CustomError('Senha incorreta', 401)
             }
 
-            const token = this.authenticator.generateToken({ id: adminByEmail.id })
+            const token = this.authenticator.generateToken({ id: adminByEmail.id, idSportsComplex: newLoginAdmin.id_complexo_esportivo })
             return token
         }catch(err: any){
             throw new CustomError(err.message, err.statusCode)

@@ -19,6 +19,8 @@ export class SportsComplexBusiness {
                 throw new CustomError('Campos inválidos', 422)
             }
 
+            newSportsComplex.numero = Number(newSportsComplex.numero)
+
             const validCnpj = await this.sportsComplexData.selectValidCnpjByCnpj(newSportsComplex.cnpj)
 
             if(!validCnpj){

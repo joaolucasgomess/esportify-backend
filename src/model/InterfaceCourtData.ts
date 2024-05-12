@@ -4,13 +4,16 @@ import { TypeCreateTime } from '../types/TypeCreateTime'
 import { TypeRentCourt } from '../types/TypeRentCourt'
 
 export interface ICourtData{
-    selectCourtByNameAndIdSportsComplex(name: string, idSportsComplex: string): Promise<Quadra>
     insertCourt(id: string, newCourt: TypeCreateCourt): Promise<Quadra>
-    selectdayOfTheWeekById(id: string): Promise<DiaSemana>
+    insertTime(id: string, newTime: TypeCreateTime): Promise<void>
+    insertDateRent(id: string, idClient: string, newRent: TypeRentCourt): Promise<void>
     selectCourtById(id: string): Promise<Quadra>
-    insertTime(id: string, newTime: TypeCreateTime): Promise<HorarioAluguel>
-    selectTimeByIdCourtAndInitialTime(id: string, insertTime: Date): Promise<HorarioAluguel>
+    selectCourtByNameAndIdSportsComplex(name: string, idSportsComplex: string): Promise<Quadra>
+    selectCourtByIdSportsComplex(idSportsComplex: string): Promise<Quadra[]>
+    selectAllCourts(): Promise<Quadra[]>
+    selectdayOfTheWeekById(id: string): Promise<DiaSemana>
     selectTimeById(id: string): Promise<HorarioAluguel>
-    selectDateRentByIdTime(id: string): Promise<DataAluguel>
-    insertDateRent(id: string, newRent: TypeRentCourt): Promise<DataAluguel>
+    selectTimeByIdCourtAndInitialTimeAndIdDayOfTheWeek(id: string, insertTime: string, idDayOfTheWeek: string): Promise<HorarioAluguel>
+    selectTimeByIdCourt(idCourt: string): Promise<HorarioAluguel[]>
+    selectDateRentByIdTimeAndDateRent(idTime: string, dateRent: string): Promise<DataAluguel>
 }

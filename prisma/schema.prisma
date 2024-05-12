@@ -24,10 +24,10 @@ model Usuario {
 model Cliente {
   id              String        @id @db.VarChar
   telefone        String        @unique @db.VarChar
-  data_nascimento DateTime      @db.Date
   criado_em       DateTime      @default(now())
   modificado_em   DateTime      @updatedAt
   id_usuario      String        @db.VarChar
+  data_nascimento DateTime?     @db.Date
   usuario         Usuario       @relation(fields: [id_usuario], references: [id])
   DataAluguel     DataAluguel[]
 
@@ -40,8 +40,8 @@ model Administrador {
   modificado_em         DateTime          @updatedAt
   id_usuario            String            @db.VarChar
   id_complexo_esportivo String            @db.VarChar
-  usuario               Usuario           @relation(fields: [id_usuario], references: [id])
   complexo_esportivo    ComplexoEsportivo @relation(fields: [id_complexo_esportivo], references: [id])
+  usuario               Usuario           @relation(fields: [id_usuario], references: [id])
 
   @@map("administrador")
 }
@@ -65,8 +65,8 @@ model ComplexoEsportivo {
   cep           String          @db.VarChar
   criado_em     DateTime        @default(now())
   modificado_em DateTime        @updatedAt
-  Quadra        Quadra[]
   Adiministador Administrador[]
+  Quadra        Quadra[]
 
   @@map("complexo_esportivo")
 }
@@ -78,8 +78,8 @@ model Quadra {
   criado_em             DateTime          @default(now())
   modificado_em         DateTime          @updatedAt
   id_complexo_esportivo String            @db.VarChar
-  complexo_esportivo    ComplexoEsportivo @relation(fields: [id_complexo_esportivo], references: [id])
   HorarioAluguel        HorarioAluguel[]
+  complexo_esportivo    ComplexoEsportivo @relation(fields: [id_complexo_esportivo], references: [id])
 
   @@map("quadra")
 }
@@ -94,9 +94,9 @@ model HorarioAluguel {
   modificado_em   DateTime      @updatedAt
   id_dia_semana   String        @db.VarChar
   id_quadra       String        @db.VarChar
-  quadra          Quadra        @relation(fields: [id_quadra], references: [id])
-  dia_semana      DiaSemana     @relation(fields: [id_dia_semana], references: [id], onDelete: NoAction, onUpdate: NoAction)
   data_aluguel    DataAluguel[]
+  dia_semana      DiaSemana     @relation(fields: [id_dia_semana], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  quadra          Quadra        @relation(fields: [id_quadra], references: [id])
 
   @@map("horario_aluguel")
 }

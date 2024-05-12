@@ -6,8 +6,8 @@ export class PlayerController {
 
     singup = async (req: Request, res: Response) => {
         try{
-            const { email, senha, nome, telefone, data_nascimento } = req.body
-            const token = await this.playerBusiness.singup({ email, senha, nome, telefone, data_nascimento })
+            const { email, senha, nome, telefone } = req.body
+            const token = await this.playerBusiness.singup({ email, senha, nome, telefone })
             res.status(201).send({ token })
         }catch(err: any){
             res.status(err.statusCode || 400).send({ error: err.message})

@@ -3,5 +3,4 @@ export type TypeCreatePlayer = {
     senha: string, 
     nome: string, 
     telefone: string
-    data_nascimento: string 
 }
