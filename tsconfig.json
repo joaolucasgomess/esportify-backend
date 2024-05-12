@@ -7,7 +7,9 @@
     "outDir": "./build",
     "removeComments": true,
     "esModuleInterop": true,
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
