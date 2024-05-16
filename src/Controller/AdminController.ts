@@ -16,8 +16,8 @@ export class AdminController {
 
     login = async (req: Request, res: Response) => {
         try{
-            const { email, senha, id_complexo_esportivo } = req.body
-            const token = await this.adminBusiness.login({ email, senha, id_complexo_esportivo })
+            const { email, senha } = req.body
+            const token = await this.adminBusiness.login({ email, senha })
             res.status(200).send({ token })
         }catch(err){
             res.status(err.statusCode || 400).send({ error: err.message })
