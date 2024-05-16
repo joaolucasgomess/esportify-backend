@@ -56,8 +56,8 @@ export class AdminBusiness {
                 throw new CustomError('Usuário ainda não cadastrado', 404)
             }
 
-            if(adminByEmail.id_complexo_esportivo !== newLoginAdmin.id_complexo_esportivo){
-                throw new CustomError('Usuário sem vínculo com Complexo Esportivo informado', 403)
+            if(!adminByEmail.id_complexo_esportivo){
+                throw new CustomError('Usuário não é um admin', 403)
             }
 
             const passwordIsCorrect = await this.hashManager.compare(newLoginAdmin.senha, adminByEmail.senha)
@@ -66,7 +66,7 @@ export class AdminBusiness {
                 throw new CustomError('Senha incorreta', 401)
             }
 
-            const token = this.authenticator.generateToken({ id: adminByEmail.id, idSportsComplex: newLoginAdmin.id_complexo_esportivo })
+            const token = this.authenticator.generateToken({ id: adminByEmail.id, idSportsComplex: adminByEmail.id_complexo_esportivo })
             return token
         }catch(err: any){
             throw new CustomError(err.message, err.statusCode)
