@@ -65,8 +65,12 @@ export default class CourtData implements ICourtData{
     selectCourtById = async (id: string): Promise<Quadra> => {
         try{
             const court = await this.prisma.quadra.findUnique({
+                relationLoadStrategy: 'join',
                 where: {
                     id: id
+                },
+                include: {
+                    complexo_esportivo: true
                 }
             })
 
@@ -79,11 +83,15 @@ export default class CourtData implements ICourtData{
     selectCourtByNameAndIdSportsComplex = async(name: string, idSportsComplex: string): Promise<Quadra> => {
         try{
             const court = await this.prisma.quadra.findFirst({
+                relationLoadStrategy: 'join',
                 where: {
                     nome: name,
                     AND: {
                         id_complexo_esportivo: idSportsComplex
                     }
+                },
+                include: {
+                    complexo_esportivo: true
                 }
             })
 
@@ -96,6 +104,10 @@ export default class CourtData implements ICourtData{
     selectCourtByIdSportsComplex = async(idSportsComplex: string): Promise<Quadra[]> => {
         try{
             const courts = await this.prisma.quadra.findMany({
+                relationLoadStrategy: 'join',
+                include: {
+                    complexo_esportivo: true
+                },
                 where: {
                     id_complexo_esportivo: idSportsComplex
                 }
@@ -109,7 +121,12 @@ export default class CourtData implements ICourtData{
 
     selectAllCourts = async(): Promise<Quadra[]> => {
         try{
-            const courts = await this.prisma.quadra.findMany()
+            const courts = await this.prisma.quadra.findMany({
+                relationLoadStrategy: 'join',
+                include: {
+                    complexo_esportivo: true
+                }
+            })
 
             return courts
         }catch(err: any){
