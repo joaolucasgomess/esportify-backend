@@ -62,6 +62,23 @@ export default class CourtData implements ICourtData{
         }
     }
 
+    deleteTime = async(idTime: string): Promise<HorarioAluguel> => {
+        try{
+            const deletedTime = await this.prisma.horarioAluguel.update({
+                where: {
+                    id: idTime
+                },
+                data: {
+                    deletado: true
+                }
+            })
+
+            return deletedTime
+        }catch(err: any){
+            throw new Error(err.slqMessage || err.message)
+        }
+    }
+
     selectCourtById = async (id: string): Promise<Quadra> => {
         try{
             const court = await this.prisma.quadra.findUnique({
@@ -151,8 +168,15 @@ export default class CourtData implements ICourtData{
     selectTimeById = async(id: string): Promise<HorarioAluguel> => {
         try{
             const time = await this.prisma.horarioAluguel.findUnique({
+                relationLoadStrategy: 'join',
                 where: {
-                    id: id
+                    id: id,
+                    AND: {
+                        deletado: false
+                    }
+                },
+                include: {
+                    dia_semana: true
                 }
             })
 
@@ -172,6 +196,7 @@ export default class CourtData implements ICourtData{
                 WHERE id_quadra = ${id}
                 AND horario_inicial = CAST(${insertTime} AS time)
                 AND id_dia_semana = ${idDayOfTheWeek}
+                AND deletado = false
             `            
 
             return time[0]
@@ -183,8 +208,15 @@ export default class CourtData implements ICourtData{
     selectTimeByIdCourt = async(idCourt: string): Promise<HorarioAluguel[]> => {
         try{
             const times = await this.prisma.horarioAluguel.findMany({
+                relationLoadStrategy: 'join',
                 where: {
-                    id_quadra: idCourt
+                    id_quadra: idCourt,
+                    AND: {
+                        deletado: false
+                    }
+                },
+                include: {
+                    dia_semana: true
                 }
             })
 
