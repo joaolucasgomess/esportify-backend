@@ -105,6 +105,42 @@ export class CourtBusiness {
         }
     }
 
+    deleteTime = async (token: string, idTime: string): Promise<HorarioAluguel> => {
+        try{
+            if(!token){
+                throw new CustomError('Token inexistente', 442)
+            }
+    
+            const tokenData = this.authenticator.getTokenData(token)
+    
+            if(!tokenData){
+                throw new CustomError('Token inválido', 401)
+            }
+
+            if(!idTime){
+                throw new CustomError('É preciso informar um id', 422)
+            }
+
+            const timeToDelete = await this.courtData.selectTimeById(idTime)
+
+            if(!timeToDelete){
+                throw new CustomError('Horário não encontrado', 404)
+            }
+
+            const court = await this.courtData.selectCourtById(timeToDelete.id_quadra)
+
+            if(tokenData.idSportsComplex !== court.id_complexo_esportivo){
+                throw new CustomError('Usuário sem permissão para essa operação', 403)
+            }
+
+            const deletedTime = await this.courtData.deleteTime(timeToDelete.id)
+
+            return deletedTime
+        }catch(err: any){
+            throw new CustomError(err.message, err.statusCode)
+        }
+    }
+
     rentCourt = async(token: string, newRent: TypeRentCourt): Promise<void> => {
         try{
             if(!token){

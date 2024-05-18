@@ -7,6 +7,7 @@ export interface ICourtData{
     insertCourt(id: string, newCourt: TypeCreateCourt): Promise<Quadra>
     insertTime(id: string, newTime: TypeCreateTime): Promise<void>
     insertDateRent(id: string, idClient: string, newRent: TypeRentCourt): Promise<void>
+    deleteTime(idTime: string): Promise<HorarioAluguel>
     selectCourtById(id: string): Promise<Quadra>
     selectCourtByNameAndIdSportsComplex(name: string, idSportsComplex: string): Promise<Quadra>
     selectCourtByIdSportsComplex(idSportsComplex: string): Promise<Quadra[]>

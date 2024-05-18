@@ -26,6 +26,17 @@ export class CourtController {
         }
     }
 
+    deleteTime = async (req: Request, res: Response): Promise<void> => {
+        try{
+            const token = req.headers.authorization as string
+            const { id_horario_aluguel } = req.params
+            const deleted_time = await this.courtBusiness.deleteTime(token, id_horario_aluguel)
+            res.status(200).send({ HorarioDeletado: deleted_time })
+        }catch(err: any){
+            res.status(err.statusCode || 400).send({ error: err.message})
+        }
+    }
+
     rentCourt = async(req: Request, res: Response): Promise<void> => {
         try{
             const token = req.headers.authorization as string

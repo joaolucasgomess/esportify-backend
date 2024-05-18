@@ -4,8 +4,9 @@ generator gen {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DB_URL")
+  provider          = "postgresql"
+  url               = env("DB_URL")
+  shadowDatabaseUrl = "postgres://esportify_shadow_user:ZzL7TL0DvjhRuU85lsexc8fVGTxawyLR@dpg-cp3vi621hbls73epvabg-a.oregon-postgres.render.com/esportify_shadow"
 }
 
 model Usuario {
@@ -27,7 +28,7 @@ model Cliente {
   criado_em       DateTime      @default(now())
   modificado_em   DateTime      @updatedAt
   id_usuario      String        @db.VarChar
-  data_nascimento DateTime?     @db.Date
+  data_nascimento DateTime?     @db.Time(6)
   usuario         Usuario       @relation(fields: [id_usuario], references: [id])
   DataAluguel     DataAluguel[]
 
@@ -91,6 +92,7 @@ model HorarioAluguel {
   preco           Float
   status          Status        @default(ATIVO)
   criado_em       DateTime      @default(now())
+  deletado        Boolean       @default(false)
   modificado_em   DateTime      @updatedAt
   id_dia_semana   String        @db.VarChar
   id_quadra       String        @db.VarChar
