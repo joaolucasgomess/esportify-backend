@@ -78,6 +78,7 @@ model Quadra {
   status                Status            @default(ATIVO)
   criado_em             DateTime          @default(now())
   modificado_em         DateTime          @updatedAt
+  url_imagem            String?           @db.VarChar
   id_complexo_esportivo String            @db.VarChar
   HorarioAluguel        HorarioAluguel[]
   complexo_esportivo    ComplexoEsportivo @relation(fields: [id_complexo_esportivo], references: [id])
