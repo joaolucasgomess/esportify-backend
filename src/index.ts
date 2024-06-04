@@ -7,8 +7,12 @@ import { adminRouter } from './routes/adminRouter'
 import { playerRouter } from './routes/playerRouter'
 import { courtRouter } from './routes/courtRouter'
 import { PrismaClient, DiaSemana } from '@prisma/client'
+import http from 'http'
+import { Server } from 'socket.io'
 
 const app = express()
+const server = http.createServer(app)
+const io = new Server(server)
 
 app.use(express.json())
 app.use(cors())
@@ -21,6 +25,10 @@ app.get('/', async (req: Request, res: Response) => {
   } catch (e: any) {
     res.send(e.sqlMessage || e.message)
   }
+})
+
+app.get('/teste', (req: Request, res: Response) => {
+  res.sendFile(__dirname + '/index.html')
 })
 
 app.use('/complexo-esportivo/', sportsComplexRouter)
@@ -44,7 +52,11 @@ app.get('/dias_semana', async (req: Request, res: Response) => {
   }
 })
 
-const server = app.listen(process.env.PORT || 3003, () => {
+io.on('connection', (socket) => {
+  console.log('usuário conectado: ', socket.id)
+})
+
+server.listen(process.env.PORT || 3003, () => {
   if (server) {
     const address = server.address() as AddressInfo
     console.log(`Server is running in http://localhost:${address.port}`)
