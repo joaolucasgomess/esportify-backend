@@ -11,3 +11,4 @@ const adminController = new AdminController(adminBusiness)
 
 adminRouter.post('/singup/', adminController.addAdmin)
 adminRouter.post('/login/', adminController.login)
+adminRouter.get('/buscar-logado', adminController.getAdmin)

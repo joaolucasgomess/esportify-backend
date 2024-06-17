@@ -54,6 +54,14 @@ app.get('/dias_semana', async (req: Request, res: Response) => {
 
 io.on('connection', (socket) => {
   console.log('usuário conectado: ', socket.id)
+
+  io.on('disconnect', () => {
+    console.log(`usuário ${socket.id} desconectado`)
+  })
+
+  io.on('rent', (rent) => {
+    io.emit('rent', rent)
+  })
 })
 
 server.listen(process.env.PORT || 3003, () => {

@@ -4,4 +4,5 @@ import { TypeCreatePlayer } from '../types/TypeCreatePlayer'
 export interface IPlayerData {
     selectPlayerByEmail(email: string): Promise<Usuario>
     insertPlayer(id: string, newPlayer: TypeCreatePlayer): Promise<Cliente>
+    selectPlayerById(id: string): Promise<Usuario>
 }

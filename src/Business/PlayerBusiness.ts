@@ -6,6 +6,7 @@ import { HashManager } from '../services/HashManager'
 import { verifyFieldsToObject } from '../Utils/VerifyFieldsToObject' 
 import { TypeCreatePlayer } from '../types/TypeCreatePlayer'
 import { TypeLoginPlayer } from '../types/TypeLoginPlayer'
+import { validadePassWord, validateEmail } from '../Utils/ValidateRegex'
 
 export class PlayerBusiness {
     private playerData: IPlayerData
@@ -28,6 +29,14 @@ export class PlayerBusiness {
 
             if(playerByEmail){
                 throw new CustomError('Email já cadastrado', 422)   
+            }
+
+            if(validateEmail.test(newPlayer.email) === false){
+              throw new CustomError('Email inválido', 422)
+            }
+
+            if(validadePassWord.test(newPlayer.senha) === false){
+              throw new CustomError('Senha inválido', 422)
             }
 
             //TODO testar se a idade é >= 18 anos
@@ -68,5 +77,25 @@ export class PlayerBusiness {
         }catch(err: any){
             throw new CustomError(err.message, err.statusCode)
         }
+    }
+
+    getPlayer = async (token: string) => {
+      try{
+        if(!token){
+          throw new CustomError('Token inexistente', 442)
+        }
+
+        const tokenData = this.authenticator.getTokenData(token)
+
+        if(!tokenData){
+            throw new CustomError('Token inválido', 401)
+        }
+
+        const player = this.playerData.selectPlayerById(tokenData.id)
+
+        return player
+      }catch(err: any){
+        throw new CustomError(err.message, err.statusCode)
+      }
     }
 }   

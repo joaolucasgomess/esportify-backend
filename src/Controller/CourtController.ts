@@ -51,7 +51,9 @@ export class CourtController {
     getCourts = async(req: Request, res: Response): Promise<void> => {
         try{
             const token = req.headers.authorization as string
-            const courts = await this.courtBusiness.getCourts(token)
+            const querys = req.query as {nome: string, locatario: string}
+            console.log(querys)
+            const courts = await this.courtBusiness.getCourts(token, querys)
             res.status(200).send({ courts })
         }catch(err: any){
             res.status(err.statusCode || 400).send({ error: err.message})

@@ -11,3 +11,4 @@ const playerController = new PlayerController(playerBusiness)
 
 playerRouter.post('/singup/', playerController.singup)
 playerRouter.post('/login/', playerController.login)
+playerRouter.get('/buscar-logado', playerController.getPlayer)

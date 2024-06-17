@@ -23,4 +23,14 @@ export class AdminController {
             res.status(err.statusCode || 400).send({ error: err.message })
         }
     }
+
+    getAdmin = async (req: Request, res: Response) => {
+      try{
+        const token = req.headers.authorization as string
+        const admin = await this.adminBusiness.getAdmin(token)
+        res.status(200).send({ admin })
+      }catch(err: any){
+        res.status(err.statusCode || 400).send({ error: err.message})
+      }
+    }
 }

@@ -5,7 +5,8 @@ import { CustomError } from '../Utils/CustomError'
 import { generatedId } from '../services/idGenerator'
 import { Authenticator } from '../services/Authenticator'
 import { HashManager } from '../services/HashManager'
-import { verifyFieldsToObject } from '../Utils/VerifyFieldsToObject'  
+import { verifyFieldsToObject } from '../Utils/VerifyFieldsToObject'
+import { validateEmail, validadePassWord } from '../Utils/ValidateRegex'  
 
 export class AdminBusiness {
     private adminData: IAdminData
@@ -24,6 +25,14 @@ export class AdminBusiness {
             if(verifyFieldsToObject(newAdmin) === false){
                 throw new CustomError('Campos inválidos', 422)
             }  
+            
+            if(validateEmail.test(newAdmin.email) === false){
+              throw new CustomError('Email inválido', 422)
+            }
+
+            if(validadePassWord.test(newAdmin.senha) === false){
+              throw new CustomError('Senha inválido', 422)
+            }
 
             const adminByEmail = await this.adminData.selectAdminByEmail(newAdmin.email)
 
@@ -71,5 +80,25 @@ export class AdminBusiness {
         }catch(err: any){
             throw new CustomError(err.message, err.statusCode)
         }
+    }
+
+    getAdmin = async (token: string) => {
+      try{
+        if(!token){
+          throw new CustomError('Token inexistente', 442)
+        }
+
+        const tokenData = this.authenticator.getTokenData(token)
+
+        if(!tokenData){
+            throw new CustomError('Token inválido', 401)
+        }
+
+        const player = this.adminData.selectAdminById(tokenData.id)
+
+        return player
+      }catch(err: any){
+        throw new CustomError(err.message, err.statusCode)
+      }
     }
 }
