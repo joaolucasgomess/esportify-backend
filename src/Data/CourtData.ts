@@ -167,7 +167,11 @@ export default class CourtData implements ICourtData{
               q.*,
               JSON_BUILD_OBJECT(
                 'nome_complexo_esportivo', c.nome,
-                'cnpj', c.cnpj
+                'cnpj', c.cnpj,
+                'rua', c.rua,
+                'bairro', c.bairro,
+                'numero', c.numero,
+                'cep', c.cep,
               ) as complexo_esportivo
             FROM quadra as q
             JOIN complexo_esportivo as c
