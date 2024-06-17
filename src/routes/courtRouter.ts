@@ -16,3 +16,4 @@ courtRouter.delete('/deletar-horario/:id_horario_aluguel', courtController.delet
 courtRouter.get('/', courtController.getCourts)
 courtRouter.get('/:id_quadra', courtController.getCourtById)
 courtRouter.get('/horarios/:id_quadra', courtController.getTimeByIdCourt)
+courtRouter.get('/alugueis/:id_quadra', courtController.getRentByCourtId)

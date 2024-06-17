@@ -211,7 +211,7 @@ export default class CourtData implements ICourtData{
         }
     }
 
-    selectTimeByIdCourtAndInitialTimeAndIdDayOfTheWeek = async(id: string, insertTime: string, idDayOfTheWeek: string):Promise<HorarioAluguel> => {
+    selectTimeByIdCourtAndInitialTimeAndIdDayOfTheWeek = async(id: string, insertTime: string, idDayOfTheWeek: string):Promise<any> => {
         try{
             const time: HorarioAluguel[] = await this.prisma.$queryRaw`
                 SELECT 
@@ -266,5 +266,37 @@ export default class CourtData implements ICourtData{
         }catch(err: any){
             throw new Error(err.slqMessage || err.message)
         }
+    }
+
+    selectRentByIdCourt = async(idCourt: string): Promise<any> => {
+      try{
+        const rent = await this.prisma.$queryRaw`
+          select
+          d.data, 
+          JSON_BUILD_OBJECT(
+            'horario_inicial', h.horario_inicial,
+            'horario_final', h.horario_final,
+            'preco', h.preco, 
+            'id_quadra', h.id_quadra 
+          ) as horario_aluguel,
+          JSON_BUILD_OBJECT(
+            'nome', u.nome
+          ) as usuario
+          from data_aluguel AS d
+          JOIN horario_aluguel AS h
+          ON h.id = d.id_horario_aluguel
+          join quadra as q
+          on q.id = h.id_quadra
+          join cliente as c
+          on c.id = d.id_cliente
+          join usuario as u
+          on u.id = c.id_usuario
+          where q.id = ${idCourt}
+        ` 
+        return rent
+        
+      }catch(err: any){
+        throw new Error(err.slqMessage || err.message)
+      }
     }
 }
