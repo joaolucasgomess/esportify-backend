@@ -82,4 +82,15 @@ export class CourtController {
             res.status(err.statusCode || 400).send({ error: err.message})
         }
     }
+
+    getRentByCourtId = async(req: Request, res: Response): Promise<void> => {
+      try{
+        const token = req.headers.authorization as string
+        const { id_quadra } = req.params
+        const rentTimes = await this.courtBusiness.getRentByCourtId(token, id_quadra)
+        res.status(200).send({ rentTimes })
+      }catch(err: any){
+        res.status(err.statusCode || 400).send({ error: err.message})
+      }
+    }
 }

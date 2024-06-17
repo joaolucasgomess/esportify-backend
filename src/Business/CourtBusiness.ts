@@ -264,7 +264,7 @@ export class CourtBusiness {
         }
     }
 
-    getTimeByIdCourt = async(token: string, idCourt: string): Promise<HorarioAluguel[]> => {
+    getTimeByIdCourt = async(token: string, idCourt: string): Promise<any> => {
         try{
             if(!token){
                 throw new CustomError('Token inexistente', 442)
@@ -286,10 +286,33 @@ export class CourtBusiness {
                 throw new CustomError('Quadra não possui horários cadastrados', 404)
             }
 
-            return timeByIdCourt
 
         }catch(err: any){
             throw new CustomError(err.message, err.statusCode)
         }
+    }
+
+    getRentByCourtId = async(token: string, idCourt: string) => {
+      if(!token){
+        throw new CustomError('Token inexistente', 442)
+      }
+
+      const tokenData = this.authenticator.getTokenData(token)
+
+      if(!tokenData){
+          throw new CustomError('Token inválido', 401)
+      }
+
+      if(!idCourt){
+          throw new CustomError('Campos inválidos', 422)
+      }
+
+      const rent = await this.courtData.selectRentByIdCourt(idCourt)
+
+      if(!rent){
+        throw new CustomError('Alugueis não encontrados', 404)
+      }
+
+      return rent
     }
 }
