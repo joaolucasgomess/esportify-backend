@@ -136,16 +136,41 @@ export default class CourtData implements ICourtData{
         }
     }
 
-    selectAllCourts = async(): Promise<Quadra[]> => {
+    selectAllCourts = async(querys: {nome: string, locatario: string}): Promise<any> => {
         try{
-            const courts = await this.prisma.quadra.findMany({
-                relationLoadStrategy: 'join',
-                include: {
-                    complexo_esportivo: true
-                }
-            })
+          if(querys.nome !== undefined || querys.locatario !== undefined){
+            const courts = await this.prisma.$queryRaw`
+            SELECT 
+              q.*,
+              JSON_BUILD_OBJECT(
+                'nome_complexo_esportivo', c.nome,
+                'cnpj', c.cnpj
+              ) as complexo_esportivo
+            FROM quadra as q
+            JOIN complexo_esportivo as c
+            ON c.id = q.id_complexo_esportivo
+            WHERE
+            q.nome LIKE ${querys.nome} 
+            OR
+            c.nome LIKE ${querys.locatario}
+            `
 
-            return courts
+            return courts 
+          }
+          else{
+            const courts = await this.prisma.$queryRaw`
+            SELECT 
+              q.*,
+              JSON_BUILD_OBJECT(
+                'nome_complexo_esportivo', c.nome,
+                'cnpj', c.cnpj
+              ) as complexo_esportivo
+            FROM quadra as q
+            JOIN complexo_esportivo as c
+            ON c.id = q.id_complexo_esportivo
+            `  
+            return courts 
+          }
         }catch(err: any){
             throw new Error(err.slqMessage || err.message)
         }

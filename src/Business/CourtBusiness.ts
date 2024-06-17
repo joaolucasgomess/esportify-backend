@@ -196,7 +196,7 @@ export class CourtBusiness {
         }
     }
 
-    getCourts = async(token: string): Promise<Quadra[]> => {
+    getCourts = async(token: string, querys: {nome: string, locatario: string}): Promise<Quadra[]> => {
         try{
             if(!token){
                 throw new CustomError('Token inexistente', 442)
@@ -217,7 +217,8 @@ export class CourtBusiness {
 
                 return courtsBySportsComplex
             }else{
-                const allCourts = await this.courtData.selectAllCourts()
+
+                const allCourts = await this.courtData.selectAllCourts(querys)
 
                 if(!allCourts){
                     throw new CustomError('Nenhuma quadra encontrada', 404)

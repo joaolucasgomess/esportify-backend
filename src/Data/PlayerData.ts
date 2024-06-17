@@ -43,4 +43,21 @@ export default class PlayerData implements IPlayerData {
             throw new Error(err.slqMessage || err.message)
         }
     }
+
+    selectPlayerById = async(id: string): Promise<any> => {
+      try{
+        const player = await this.prisma.usuario.findUnique({
+          where: {
+              id: id
+          },
+          select: {
+            email: true,
+            nome: true
+          }
+      })
+      return player
+      }catch(err: any){
+        throw new Error(err.slqMessage || err.message)
+      }
+    }    
 }
