@@ -52,7 +52,6 @@ export class CourtController {
         try{
             const token = req.headers.authorization as string
             const querys = req.query as {nome: string, locatario: string}
-            console.log(querys)
             const courts = await this.courtBusiness.getCourts(token, querys)
             res.status(200).send({ courts })
         }catch(err: any){
