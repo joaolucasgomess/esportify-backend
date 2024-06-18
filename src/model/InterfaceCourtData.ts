@@ -11,7 +11,7 @@ export interface ICourtData{
     selectCourtById(id: string): Promise<Quadra>
     selectCourtByNameAndIdSportsComplex(name: string, idSportsComplex: string): Promise<Quadra>
     selectCourtByIdSportsComplex(idSportsComplex: string): Promise<Quadra[]>
-    selectAllCourts(querys: {}): Promise<any>
+    selectAllCourts(querys: {nome: string, locatario: string}): Promise<Quadra[]>
     selectdayOfTheWeekById(id: string): Promise<DiaSemana>
     selectTimeById(id: string): Promise<HorarioAluguel>
     selectTimeByIdCourtAndInitialTimeAndIdDayOfTheWeek(id: string, insertTime: string, idDayOfTheWeek: string): Promise<HorarioAluguel>
