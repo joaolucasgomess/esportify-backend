@@ -148,7 +148,7 @@ export default class CourtData implements ICourtData{
                 'rua', c.rua,
                 'bairro', c.bairro,
                 'numero', c.numero,
-                'cep', c.cep,
+                'cep', c.cep
               ) as complexo_esportivo
             FROM quadra as q
             JOIN complexo_esportivo as c
@@ -171,7 +171,7 @@ export default class CourtData implements ICourtData{
                 'rua', c.rua,
                 'bairro', c.bairro,
                 'numero', c.numero,
-                'cep', c.cep,
+                'cep', c.cep
               ) as complexo_esportivo
             FROM quadra as q
             JOIN complexo_esportivo as c
