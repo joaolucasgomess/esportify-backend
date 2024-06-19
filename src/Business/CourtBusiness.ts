@@ -286,7 +286,7 @@ export class CourtBusiness {
                 throw new CustomError('Quadra não possui horários cadastrados', 404)
             }
 
-
+            return timeByIdCourt
         }catch(err: any){
             throw new CustomError(err.message, err.statusCode)
         }
