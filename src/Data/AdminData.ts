@@ -29,14 +29,14 @@ export default class AdminData implements IAdminData {
                     data: {
                         id: id,
                         email: newAdmin.email,
-                        nome: newAdmin.nome,
+                        nome: newAdmin.nomeUsuario,
                         senha: newAdmin.senha              
                     }
                 }),
                 this.prisma.administrador.create({
                     data: {
                         id: id,
-                        id_complexo_esportivo: newAdmin.id_complexo_esportivo,
+                        id_complexo_esportivo: newAdmin.idComplexoEsportivo,
                         id_usuario: id
                     }
                 })

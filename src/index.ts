@@ -6,6 +6,7 @@ import { sportsComplexRouter } from './routes/sportsComplexRouter'
 import { adminRouter } from './routes/adminRouter'
 import { playerRouter } from './routes/playerRouter'
 import { courtRouter } from './routes/courtRouter'
+import { validCnpjRouter } from './routes/validCnpjRouter'
 import { PrismaClient, DiaSemana } from '@prisma/client'
 import http from 'http'
 import { Server } from 'socket.io'
@@ -27,14 +28,15 @@ app.get('/', async (req: Request, res: Response) => {
   }
 })
 
-app.get('/teste', (req: Request, res: Response) => {
-  res.sendFile(__dirname + '/index.html')
-})
+// app.get('/teste', (req: Request, res: Response) => {
+//   res.sendFile(__dirname + '/index.html')
+// })
 
 app.use('/complexo-esportivo/', sportsComplexRouter)
 app.use('/administrador/', adminRouter)
 app.use('/jogador/', playerRouter)
 app.use('/quadra/', courtRouter)
+app.use('/valid-cnpj/', validCnpjRouter)
 
 app.get('/dias_semana', async (req: Request, res: Response) => {
   try{
@@ -52,17 +54,17 @@ app.get('/dias_semana', async (req: Request, res: Response) => {
   }
 })
 
-io.on('connection', (socket) => {
-  console.log('usuário conectado: ', socket.id)
+// io.on('connection', (socket) => {
+//   console.log('usuário conectado: ', socket.id)
 
-  io.on('disconnect', () => {
-    console.log(`usuário ${socket.id} desconectado`)
-  })
+//   io.on('disconnect', () => {
+//     console.log(`usuário ${socket.id} desconectado`)
+//   })
 
-  io.on('rent', (rent) => {
-    io.emit('rent', rent)
-  })
-})
+//   io.on('rent', (rent) => {
+//     io.emit('rent', rent)
+//   })
+// })
 
 server.listen(process.env.PORT || 3003, () => {
   if (server) {

@@ -62,6 +62,7 @@ model ComplexoEsportivo {
   rua           String          @db.VarChar
   bairro        String          @db.VarChar
   cidade        String          @db.VarChar
+  complemento   String?         @db.VarChar
   numero        Int
   cep           String          @db.VarChar
   criado_em     DateTime        @default(now())

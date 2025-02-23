@@ -4,17 +4,18 @@ import { AdminBusiness } from '../Business/AdminBusiness'
 export class AdminController {
     constructor(private adminBusiness: AdminBusiness){}
 
-    addAdmin = async (req: Request, res: Response) => {
+    addAdmin = async (req: Request, res: Response): Promise<void> => {
         try{
-            const { email, senha, nome, id_complexo_esportivo } = req.body
-            const token = await this.adminBusiness.addAdmin({ email, senha, nome, id_complexo_esportivo })
+            const { nomeUsuario, email, senha, idComplexoEsportivo } = req.body
+            console.log(req.body)
+            const token = await this.adminBusiness.addAdmin({ nomeUsuario, email, senha, idComplexoEsportivo })
             res.status(201).send({ token })
         }catch(err: any){
             res.status(err.statusCode || 400).send({ error: err.message })
         }
     }
 
-    login = async (req: Request, res: Response) => {
+    login = async (req: Request, res: Response): Promise<void> => {
         try{
             const { email, senha } = req.body
             const token = await this.adminBusiness.login({ email, senha })
@@ -24,7 +25,7 @@ export class AdminController {
         }
     }
 
-    getAdmin = async (req: Request, res: Response) => {
+    getAdmin = async (req: Request, res: Response): Promise<void> => {
       try{
         const token = req.headers.authorization as string
         const admin = await this.adminBusiness.getAdmin(token)

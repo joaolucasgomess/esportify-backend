@@ -1,6 +1,6 @@
 export type TypeCreateAdmin = {
+    nomeUsuario: string,
     email: string, 
     senha: string,
-    nome: string, 
-    id_complexo_esportivo: string
+    idComplexoEsportivo: string
 }

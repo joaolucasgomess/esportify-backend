@@ -4,6 +4,7 @@ export type TypeCreateSportsComplex = {
     rua: string, 
     bairro: string, 
     cidade: string, 
+    complemento: string | null,
     numero: number, 
     cep: string
 }

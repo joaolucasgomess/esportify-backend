@@ -15,7 +15,7 @@ export interface ICourtData{
     selectdayOfTheWeekById(id: string): Promise<DiaSemana>
     selectTimeById(id: string): Promise<HorarioAluguel>
     selectTimeByIdCourtAndInitialTimeAndIdDayOfTheWeek(id: string, insertTime: string, idDayOfTheWeek: string): Promise<HorarioAluguel>
-    selectTimeByIdCourt(idCourt: string): Promise<any>
+    selectTimeByIdCourt(idCourt: string): Promise<HorarioAluguel[]>
     selectDateRentByIdTimeAndDateRent(idTime: string, dateRent: string): Promise<DataAluguel>
     selectRentByIdCourt(idCourt: string): Promise<any>
 }

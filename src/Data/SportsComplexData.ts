@@ -15,6 +15,7 @@ export default class SportsComplexData implements ISportsComplexData {
                         cnpj: newSportsComplex.cnpj,
                         cidade: newSportsComplex.cidade,
                         bairro: newSportsComplex.bairro,
+                        complemento: newSportsComplex.complemento,
                         rua: newSportsComplex.rua,
                         numero: newSportsComplex.numero,
                         cep: newSportsComplex.cep
@@ -31,19 +32,6 @@ export default class SportsComplexData implements ISportsComplexData {
             ])
 
             return sportsComplex
-        }catch(err: any){
-            throw new Error(err.slqMessage || err.message)
-        }
-    }
-
-    selectValidCnpjByCnpj = async(cnpj: string): Promise<CnpjValido> => {
-        try{
-            const validCnpj = await this.prisma.cnpjValido.findFirst({
-                where: {
-                    cnpj: cnpj
-                }
-            })
-            return validCnpj
         }catch(err: any){
             throw new Error(err.slqMessage || err.message)
         }

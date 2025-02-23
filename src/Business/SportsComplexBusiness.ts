@@ -4,31 +4,30 @@ import { CustomError } from '../Utils/CustomError'
 import { verifyFieldsToObject } from '../Utils/VerifyFieldsToObject' // TODO
 import { ComplexoEsportivo } from '@prisma/client'
 import { generatedId } from '../services/idGenerator'
+import ValidCnpjBusiness from './ValidCnpjBusiness'
 
 export class SportsComplexBusiness {
     private sportsComplexData: ISportsComplexData
+    private validCnpjBusiness: ValidCnpjBusiness
 
-    constructor(sportsComplexRepository: ISportsComplexData){
+    constructor(sportsComplexRepository: ISportsComplexData, validCnpjBusiness: ValidCnpjBusiness){
         this.sportsComplexData = sportsComplexRepository
+        this.validCnpjBusiness = validCnpjBusiness
     }
 
     addSportsComplexBusiness = async(newSportsComplex: TypeCreateSportsComplex): Promise<ComplexoEsportivo> => {
         try{
-
-            if(verifyFieldsToObject(newSportsComplex) === false){
-                throw new CustomError('Campos inválidos', 422)
-            }
+            
+            // if(verifyFieldsToObject(newSportsComplex) === false){
+            //     throw new CustomError('Campos inválidos', 422)
+            // }
 
             newSportsComplex.numero = Number(newSportsComplex.numero)
 
-            const validCnpj = await this.sportsComplexData.selectValidCnpjByCnpj(newSportsComplex.cnpj)
+            const validCnpj = await this.validCnpjBusiness.validCnpj(newSportsComplex.cnpj)
 
             if(!validCnpj){
-                throw new CustomError('Cnpj informado ainda não possui acesso ao nosso sistema', 403)
-            }
-            
-            if(validCnpj.cadastrado == 'SIM'){
-                throw new CustomError('Cnpj informado já cadastrado em nossa base', 422)
+                throw new CustomError('Cnpj informado ainda não possui acesso ao nosso sistema ou já esta cadastrado', 403)
             }
 
             const id = generatedId()
