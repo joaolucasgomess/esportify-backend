@@ -62,18 +62,22 @@ export default class CourtData implements ICourtData{
         }
     }
 
-    deleteTime = async(idTime: string): Promise<HorarioAluguel> => {
+    updateTime = async(time: HorarioAluguel): Promise<HorarioAluguel> => {
         try{
-            const deletedTime = await this.prisma.horarioAluguel.update({
+            const updatedTime = await this.prisma.horarioAluguel.update({
                 where: {
-                    id: idTime
-                },
-                data: {
-                    deletado: true
+                    id: time.id
+                }, data: {
+                    horario_inicial: time.horario_inicial,
+                    horario_final: time.horario_final,
+                    preco: time.preco,
+                    status: time.status,
+                    deletado: time.deletado,
+                    modificado_em: new Date(Date.now())
                 }
             })
 
-            return deletedTime
+            return updatedTime;
         }catch(err: any){
             throw new Error(err.slqMessage || err.message)
         }

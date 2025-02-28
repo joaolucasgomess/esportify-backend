@@ -48,6 +48,17 @@ export class CourtController {
         }
     }
 
+    alterStatus = async(req: Request, res: Response): Promise<void> => {
+        try{
+            const token = req.headers.authorization as string
+            const { timeId } = req.params
+            await this.courtBusiness.alterStatus(token, timeId)
+            res.status(200).send({ message: 'status do horário atualizado com sucesso' })
+        }catch(err: any){
+            res.status(err.statusCode || 400).send({ error: err.message})
+        }
+    }
+
     getCourts = async(req: Request, res: Response): Promise<void> => {
         try{
             const token = req.headers.authorization as string

@@ -133,7 +133,9 @@ export class CourtBusiness {
                 throw new CustomError('Usuário sem permissão para essa operação', 403)
             }
 
-            const deletedTime = await this.courtData.deleteTime(timeToDelete.id)
+            timeToDelete.deletado = true
+
+            const deletedTime = await this.courtData.updateTime(timeToDelete)
 
             return deletedTime
         }catch(err: any){
@@ -190,6 +192,43 @@ export class CourtBusiness {
             // }
             const id = generatedId()
             await this.courtData.insertDateRent(id, tokenData.id, newRent)
+
+        }catch(err: any){
+            throw new CustomError(err.message, err.statusCode)
+        }
+    }
+
+    alterStatus = async(token: string, timeId: string): Promise<void> => {
+        try{
+            if(!token){
+                throw new CustomError('Token inexistente', 442)
+            }
+    
+            const tokenData = this.authenticator.getTokenData(token)
+    
+            if(!tokenData){
+                throw new CustomError('Token inválido', 401)
+            }
+
+            if(!timeId){
+                throw new CustomError('É preciso informar um id', 422)
+            }
+
+            const time = await this.courtData.selectTimeById(timeId)
+
+            if(!time){
+                throw new CustomError('Nenhum horário encontrado', 404)
+            }
+
+            //TODO: criar um metodo pra validar a conexão do horario, quadra e complexo esportivo
+
+            if(time.status == 'ATIVO'){
+                time.status = 'INATIVO'
+            }else{
+                time.status = 'ATIVO'
+            }
+
+            await this.courtData.updateTime(time)
 
         }catch(err: any){
             throw new CustomError(err.message, err.statusCode)
