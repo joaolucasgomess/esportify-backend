@@ -171,27 +171,32 @@ export class CourtBusiness {
                 throw new CustomError('Horário não encontrado', 404)
             }
 
+            const newRentDateInMiliseconds = Date.parse(newRent.data)
 
-            // if(newRent.data < dateNow){
-            //     throw new CustomError('Data informada menor que a atual', 422)          
-            // }
+            if(isNaN(newRentDateInMiliseconds)){
+                throw new CustomError('Data inválida.', 400)
+            }
 
-            // const dateRent = await this.courtData.selectDateRentByIdTimeAndDateRent(newRent.id_horario, newRent.data)
+            if(newRentDateInMiliseconds < Date.now()){
+                throw new CustomError('Data informada menor que a atual', 422)          
+            }
 
-            // if(!dateRent){
-            //     const id = generatedId()
-            //     await this.courtData.insertDateRent(id, tokenData.id, newRent)
+            const dateRent = await this.courtData.selectDateRentByIdTimeAndDateRent(newRent.id_horario, newRent.data)
+
+            if(!dateRent){
+                const id = generatedId()
+                await this.courtData.insertDateRent(id, tokenData.id, newRent)
        
-            // }else{  
-            //     if(dateRent.data === newRent.data){
-            //         throw new CustomError('Horário já alugado nesta data', 422)
-            //     }else{
-            //         const id = generatedId()
-            //         await this.courtData.insertDateRent(id, tokenData.id, newRent)
-            //     }
-            // }
-            const id = generatedId()
-            await this.courtData.insertDateRent(id, tokenData.id, newRent)
+            }else{  
+                const dateConverted = new Date(newRent.data)
+
+                if(dateRent.data === dateConverted){
+                    throw new CustomError('Horário já alugado nesta data', 422)
+                }
+
+                const id = generatedId()
+                await this.courtData.insertDateRent(id, tokenData.id, newRent)
+            }
 
         }catch(err: any){
             throw new CustomError(err.message, err.statusCode)

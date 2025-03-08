@@ -55,7 +55,7 @@ export class CourtController {
             await this.courtBusiness.alterStatus(token, timeId)
             res.status(200).send({ message: 'status do horário atualizado com sucesso' })
         }catch(err: any){
-            res.status(err.statusCode || 400).send({ error: err.message})
+            res.status(err.statusCode || 400).send({ error: err.message })
         }
     }
 

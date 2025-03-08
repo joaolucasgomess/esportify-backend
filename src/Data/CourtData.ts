@@ -45,6 +45,9 @@ export default class CourtData implements ICourtData{
     }
 
     insertDateRent = async(id: string, idClient: string, newRent: TypeRentCourt): Promise<void> => {
+        console.log(id)
+        console.log(idClient)
+        console.log(newRent)
         try{
             await this.prisma.$queryRaw`
                 INSERT INTO data_aluguel
