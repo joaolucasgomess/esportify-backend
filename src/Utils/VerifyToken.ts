@@ -1,4 +1,4 @@
-import { Authenticator } from '../services/Authenticator'
+import { Authenticator } from './Authenticator'
 import { CustomError } from './CustomError'
 
 export function verifyToken(token: string): CustomError| true{

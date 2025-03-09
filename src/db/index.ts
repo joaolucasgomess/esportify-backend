@@ -1,28 +1,27 @@
-import 'dotenv/config';
-import { drizzle } from "drizzle-orm/node-postgres";
+import "dotenv/config";
 import { Pool } from "pg";
-import { cnpjValidTable } from './schema';
-import { generatedId } from '../services/idGenerator';
+import { drizzle } from "drizzle-orm/node-postgres";
+import * as schema from "./schema";
 
-const pool = new Pool({
+export const pool = new Pool({
   connectionString: process.env.DB_URL!,
 });
 
-const db = drizzle({ client: pool });
+export const db = drizzle({ client: pool, schema: schema });
 
-async function main() {
-  const cnpjValid1: typeof cnpjValidTable.$inferInsert = {
-    id: generatedId(),
-    cnpj: '11111111111111'
-  };
+// async function main() {
+//   const cnpjValid1: typeof cnpjValidTable.$inferInsert = {
+//     id: generatedId(),
+//     cnpj: '11111111111111'
+//   };
 
-  const cnpjValid2: typeof cnpjValidTable.$inferInsert = {
-    id: generatedId(),
-    cnpj: '22222222222222'
-  };
+//   const cnpjValid2: typeof cnpjValidTable.$inferInsert = {
+//     id: generatedId(),
+//     cnpj: '22222222222222'
+//   };
 
-  await db.insert(cnpjValidTable).values(cnpjValid1);
-  await db.insert(cnpjValidTable).values(cnpjValid2);
-}
+//   await db.insert(cnpjValidTable).values(cnpjValid1);
+//   await db.insert(cnpjValidTable).values(cnpjValid2);
+// }
 
-main();
+// main();

@@ -1,0 +1,1 @@
+ALTER TABLE "admins" ALTER COLUMN "sports_complex_id" SET NOT NULL;
