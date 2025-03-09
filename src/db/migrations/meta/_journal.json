@@ -43,6 +43,41 @@
       "when": 1741496573157,
       "tag": "0005_salty_sersi",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1741540380181,
+      "tag": "0006_wise_galactus",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1741557368207,
+      "tag": "0007_steep_katie_power",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1741557586678,
+      "tag": "0008_premium_magik",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1741557898724,
+      "tag": "0009_watery_silver_samurai",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1741561367795,
+      "tag": "0010_clammy_nekra",
+      "breakpoints": true
     }
   ]
 }

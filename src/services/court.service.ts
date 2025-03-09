@@ -1,10 +1,9 @@
 import { ICourtRepository } from '../repositories/interfaces/court.repository.interface';
 import { CustomError } from '../utils/CustomError';
 import { verifyFieldsToObject } from '../utils/VerifyFieldsToObject';
-import { Quadra, HorarioAluguel, DataAluguel } from '@prisma/client';
+import { Quadra, HorarioAluguel } from '@prisma/client';
 import { generatedId } from '../utils/idGenerator';
 import { Authenticator } from '../utils/Authenticator';
-import { TypeCreateTime } from '../types/TypeCreateTime';
 import { TypeRentCourt } from '../types/TypeRentCourt';
 import { Court, NewCourt } from '../db/schema';
 
@@ -50,96 +49,6 @@ export class CourtService {
 
         }catch(err: any){
             throw new CustomError(err.message, err.statusCode);
-        }
-    }
-
-    addTime = async(token: string, newTime: TypeCreateTime): Promise<void> => {
-        try{
-            if(!token){
-                throw new CustomError('Token inexistente', 442)
-            }
-    
-            const tokenData = this.authenticator.getTokenData(token)
-    
-            if(!tokenData){
-                throw new CustomError('Token inválido', 401)
-            }
-
-            if(verifyFieldsToObject(newTime) === false){
-                throw new CustomError('Campos inválidos', 422) 
-            } 
-
-            newTime.preco = Number(newTime.preco) 
-
-            if(newTime.preco <= 0){
-                throw new CustomError('O preço informado é menor ou igual a zero', 403)
-            }
-
-            const dayOfTheWeek = await this.courtRepository.selectdayOfTheWeekById(newTime.id_dia_semana)
-
-            if(!dayOfTheWeek){
-                throw new CustomError('Dia da semana não encontrado', 404)       
-            }
-
-            const court = await this.courtRepository.selectCourtById(newTime.id_quadra)
-
-            if(!court){
-                throw new CustomError('Quadra não encontrada', 404)
-            }
-
-            if(court.id_complexo_esportivo !== tokenData.idSportsComplex){
-                throw new CustomError('Complexo esportivo informado difere do logado', 403)
-            }
-
-            const timeByIdCourtAndInitialTime = await this.courtRepository.selectTimeByIdCourtAndInitialTimeAndIdDayOfTheWeek(newTime.id_quadra, newTime.horario_inicial, dayOfTheWeek.id)
-
-            if(timeByIdCourtAndInitialTime){
-                throw new CustomError(`Já existe um horário iniciando em  no dia selecionado`, 422)
-            }//TODO definir melhor as validações para não permitir horários repetidos
-
-            const id = generatedId()
-            await this.courtRepository.insertTime(id, newTime)
-            
-        }catch(err: any){
-            throw new CustomError(err.message, err.statusCode)
-        }
-    }
-
-    deleteTime = async (token: string, idTime: string): Promise<HorarioAluguel> => {
-        try{
-            if(!token){
-                throw new CustomError('Token inexistente', 442)
-            }
-    
-            const tokenData = this.authenticator.getTokenData(token)
-    
-            if(!tokenData){
-                throw new CustomError('Token inválido', 401)
-            }
-
-            if(!idTime){
-                throw new CustomError('É preciso informar um id', 422)
-            }
-
-            const timeToDelete = await this.courtRepository.selectTimeById(idTime)
-
-            if(!timeToDelete){
-                throw new CustomError('Horário não encontrado', 404)
-            }
-
-            const court = await this.courtRepository.selectCourtById(timeToDelete.id_quadra)
-
-            if(tokenData.idSportsComplex !== court.id_complexo_esportivo){
-                throw new CustomError('Usuário sem permissão para essa operação', 403)
-            }
-
-            timeToDelete.deletado = true
-
-            const deletedTime = await this.courtRepository.updateTime(timeToDelete)
-
-            return deletedTime
-        }catch(err: any){
-            throw new CustomError(err.message, err.statusCode)
         }
     }
 
@@ -197,43 +106,6 @@ export class CourtService {
                 const id = generatedId()
                 await this.courtRepository.insertDateRent(id, tokenData.id, newRent)
             }
-
-        }catch(err: any){
-            throw new CustomError(err.message, err.statusCode)
-        }
-    }
-
-    alterStatus = async(token: string, timeId: string): Promise<void> => {
-        try{
-            if(!token){
-                throw new CustomError('Token inexistente', 442)
-            }
-    
-            const tokenData = this.authenticator.getTokenData(token)
-    
-            if(!tokenData){
-                throw new CustomError('Token inválido', 401)
-            }
-
-            if(!timeId){
-                throw new CustomError('É preciso informar um id', 422)
-            }
-
-            const time = await this.courtRepository.selectTimeById(timeId)
-
-            if(!time){
-                throw new CustomError('Nenhum horário encontrado', 404)
-            }
-
-            //TODO: criar um metodo pra validar a conexão do horario, quadra e complexo esportivo
-
-            if(time.status == 'ATIVO'){
-                time.status = 'INATIVO'
-            }else{
-                time.status = 'ATIVO'
-            }
-
-            await this.courtRepository.updateTime(time)
 
         }catch(err: any){
             throw new CustomError(err.message, err.statusCode)
@@ -303,34 +175,6 @@ export class CourtService {
 
             return courtById
 
-        }catch(err: any){
-            throw new CustomError(err.message, err.statusCode)
-        }
-    }
-
-    getTimeByIdCourt = async(token: string, idCourt: string): Promise<any> => {
-        try{
-            if(!token){
-                throw new CustomError('Token inexistente', 442)
-            }
-    
-            const tokenData = this.authenticator.getTokenData(token)
-    
-            if(!tokenData){
-                throw new CustomError('Token inválido', 401)
-            }
-
-            if(!idCourt){
-                throw new CustomError('Campos inválidos', 422)
-            }
-
-            const timeByIdCourt = this.courtRepository.selectTimeByIdCourt(idCourt)
-
-            if(!timeByIdCourt){
-                throw new CustomError('Quadra não possui horários cadastrados', 404)
-            }
-
-            return timeByIdCourt
         }catch(err: any){
             throw new CustomError(err.message, err.statusCode)
         }

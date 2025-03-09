@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { pgTable, varchar, timestamp, date, integer, boolean, time, decimal, uuid } from "drizzle-orm/pg-core";
+import { pgTable, varchar, timestamp, date, integer, boolean, time, doublePrecision, uuid } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
   id: uuid().primaryKey(),
@@ -35,7 +35,7 @@ export const address = pgTable("address", {
   complement: varchar(),
   number: integer().notNull(),
   state: varchar().notNull(),
-  zipCode: varchar({ length: 8 }).notNull(),
+  zipCode: varchar("zip_code", { length: 8 }).notNull(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow().$onUpdate(() => new Date()).notNull()
 });
@@ -44,7 +44,7 @@ export const sportsComplexes = pgTable("sports_complex", {
   id: uuid().primaryKey(),
   name: varchar().notNull(),
   cnpj: varchar({ length: 15 }).notNull().unique(),
-  addressId: uuid().references(() => address.id).notNull(),
+  addressId: uuid("address_id").references(() => address.id).notNull(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow().$onUpdate(() => new Date()).notNull()
 });
@@ -59,17 +59,17 @@ export const courts = pgTable("courts", {
   updatedAt: timestamp("updated_at").defaultNow().$onUpdate(() => new Date()).notNull()
 });
 
-export const availableSlots = pgTable("avaliable_slots", {
+export const availableSlots = pgTable("availableSlots", {
   id: uuid().primaryKey(),
   startTime: time("start_time").notNull(),
   endTime: time("end_time").notNull(),
-  startDate: date("start_date"),
-  endDate: date("end_date"),
-  price: decimal().notNull(),
+  startDate: date("start_date").notNull(),
+  endDate: date("end_date").notNull(),
+  price: doublePrecision().notNull(),
   dayOfWeek: integer("day_of_week").notNull(),
   active: boolean().notNull().default(true),
   deleted: timestamp().default(null),
-  courtId: uuid("court_id").references(() => courts.id),
+  courtId: uuid("court_id").references(() => courts.id).notNull(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow().$onUpdate(() => new Date()).notNull()
 });

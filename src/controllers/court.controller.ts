@@ -15,28 +15,6 @@ export class CourtController {
         }
     }
 
-    addTime = async(req: Request, res: Response): Promise<void> => {
-        try{
-            const token = req.headers.authorization as string
-            const { id_quadra, id_dia_semana, horario_inicial, horario_final, preco } = req.body
-            const new_time = await this.courtService.addTime(token, { id_quadra, id_dia_semana, horario_inicial, horario_final, preco })
-            res.status(201).send({ message: 'Horário adionado com sucesso!' })
-        }catch(err: any){
-            res.status(err.statusCode || 400).send({ error: err.message})
-        }
-    }
-
-    deleteTime = async (req: Request, res: Response): Promise<void> => {
-        try{
-            const token = req.headers.authorization as string
-            const { id_horario_aluguel } = req.params
-            const deleted_time = await this.courtService.deleteTime(token, id_horario_aluguel)
-            res.status(200).send({ HorarioDeletado: deleted_time })
-        }catch(err: any){
-            res.status(err.statusCode || 400).send({ error: err.message})
-        }
-    }
-
     rentCourt = async(req: Request, res: Response): Promise<void> => {
         try{
             const token = req.headers.authorization as string
@@ -45,17 +23,6 @@ export class CourtController {
             res.status(201).send({ message: 'Quadra alugada com sucesso' })
         }catch(err: any){
             res.status(err.statusCode || 400).send({ error: err.message})
-        }
-    }
-
-    alterStatus = async(req: Request, res: Response): Promise<void> => {
-        try{
-            const token = req.headers.authorization as string
-            const { timeId } = req.params
-            await this.courtService.alterStatus(token, timeId)
-            res.status(200).send({ message: 'status do horário atualizado com sucesso' })
-        }catch(err: any){
-            res.status(err.statusCode || 400).send({ error: err.message })
         }
     }
 
@@ -77,17 +44,6 @@ export class CourtController {
             console.log(id_quadra)
             const courts = await this.courtService.getCourtById(token, id_quadra)
             res.status(200).send({ courts })
-        }catch(err: any){
-            res.status(err.statusCode || 400).send({ error: err.message})
-        }
-    }
-
-    getTimeByIdCourt = async(req: Request, res: Response): Promise<void> => {
-        try{
-            const token = req.headers.authorization as string
-            const { id_quadra } = req.params
-            const times = await this.courtService.getTimeByIdCourt(token, id_quadra)
-            res.status(200).send({ times })
         }catch(err: any){
             res.status(err.statusCode || 400).send({ error: err.message})
         }
