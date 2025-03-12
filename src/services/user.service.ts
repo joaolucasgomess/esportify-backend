@@ -7,6 +7,7 @@ import { IAdminRepository } from '../repositories/interfaces/admin.respository.i
 import { ISportsComplexRepository } from '../repositories/interfaces/sportsComplex.repository.interface';
 import { Authenticator } from '../utils/Authenticator';
 import { IPlayerRepository } from '../repositories/interfaces/player.repository.interface';
+import { User } from '../db/schema';
 
 export class UserService{
   private userRepository: IUserRepository;
@@ -80,6 +81,18 @@ export class UserService{
 
             throw new CustomError("Erro inesperado", 400);
 
+        }catch(err: any){
+            throw new CustomError(err.message, err.statusCode);
+        }
+    }
+
+    async getUserById(id: string): Promise<Omit<User, "password">>{
+        try{
+            if(!id){
+                throw new CustomError("userId required", 422);
+            }
+
+            return this.userRepository.selectUserById(id);
         }catch(err: any){
             throw new CustomError(err.message, err.statusCode);
         }

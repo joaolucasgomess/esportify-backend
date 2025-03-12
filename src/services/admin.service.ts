@@ -48,10 +48,10 @@ export class AdminService {
             const hashedPassword = await this.hashManager.hash(newUserAdmin.password);
             newUserAdmin.password = hashedPassword;
 
-            await this.userRepository.insertUser({ id: id, email: newUserAdmin.email, password: newUserAdmin.password, name: newUserAdmin.name });
+            await this.userRepository.insertUser({ id: id, email: newUserAdmin.email, password: newUserAdmin.password, name: newUserAdmin.name, role: "admin" });
             await this.adminRepository.insertAdmin({ id: id, userId: id, sportsComplexId: newUserAdmin.sportsComplexId });
 
-            const token = this.authenticator.generateToken({ id: id, idSportsComplex: newUserAdmin.sportsComplexId });
+            const token = this.authenticator.generateToken({ id });
             return token;
 
         }catch(err: any){
@@ -59,21 +59,11 @@ export class AdminService {
         }
     }
 
-    getAdmin = async (token: string): Promise<Admin | undefined> => {
+    getAdmin = async (id: string): Promise<Admin | undefined> => {
       try{
-        if(!token){
-          throw new CustomError('Token inexistente', 442);
-        }
 
-        const tokenData = this.authenticator.getTokenData(token);
+        return await this.adminRepository.selectAdminById(id);
 
-        if(!tokenData){
-            throw new CustomError('Token inválido', 401);
-        }
-
-        const player = this.adminRepository.selectAdminById(tokenData.id);
-
-        return player;
       }catch(err: any){
         throw new CustomError(err.message, err.statusCode);
       }

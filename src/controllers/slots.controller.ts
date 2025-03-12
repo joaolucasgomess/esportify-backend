@@ -6,9 +6,16 @@ export class SlotsController {
 
     addAvailableSlots = async(req: Request, res: Response): Promise<void> => {
         try{
-            const token = req.headers.authorization as string;
             const { startTime, endTime, startDate, endDate, price, dayOfWeek, courtId } = req.body;
-            await this.slotsService.addAvailableSlot(token, { startTime, endTime, startDate, endDate, price, dayOfWeek, courtId });
+            await this.slotsService.addAvailableSlot({ 
+                startTime, 
+                endTime, 
+                startDate, 
+                endDate, 
+                price, 
+                dayOfWeek, 
+                courtId }, 
+                req.authenticatedUser.sportsComplexId);
             res.status(201).send({ message: 'Horário adionado com sucesso!' });
         }catch(err: any){
             res.status(err.statusCode || 400).send({ error: err.message});
@@ -17,9 +24,8 @@ export class SlotsController {
 
     deleteSlot = async (req: Request, res: Response): Promise<void> => {
         try{
-            const token = req.headers.authorization as string;
             const { slotId } = req.params;
-            await this.slotsService.deleteSlot(token, slotId);
+            await this.slotsService.deleteSlot(slotId, req.authenticatedUser.sportsComplexId);
             res.status(200).send({ message: "Horário deletado com sucesso." });
         }catch(err: any){
             res.status(err.statusCode || 400).send({ error: err.message});
@@ -28,9 +34,8 @@ export class SlotsController {
 
     alterSlotStatus = async(req: Request, res: Response): Promise<void> => {
         try{
-            const token = req.headers.authorization as string;
             const { slotId } = req.params;
-            await this.slotsService.alterSlotStatus(token, slotId);
+            await this.slotsService.alterSlotStatus(slotId);
             res.status(200).send({ message: 'status do horário atualizado com sucesso' });
         }catch(err: any){
             res.status(err.statusCode || 400).send({ error: err.message });
@@ -39,9 +44,8 @@ export class SlotsController {
 
     getSlotsByCourtId = async(req: Request, res: Response): Promise<void> => {
         try{
-            const token = req.headers.authorization as string;
             const { courtId } = req.params;
-            const slots = await this.slotsService.getSlotsByCourtId(token, courtId);
+            const slots = await this.slotsService.getSlotsByCourtId(courtId);
             res.status(200).send({ slots });
         }catch(err: any){
             res.status(err.statusCode || 400).send({ error: err.message});

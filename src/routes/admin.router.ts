@@ -3,13 +3,20 @@ import { AdminController } from '../controllers/admin.controller';
 import { AdminService } from '../services/admin.service';
 import { AdminRepository } from '../repositories/implementations/admin.repository';
 import { UserRepository } from '../repositories/implementations/user.repository';
-
-export const adminRouter = express.Router();
+import { AuthMiddleware } from '../middlewares/auth.middleware';
 
 const adminRepository = new AdminRepository();
 const userRepository = new UserRepository();
 const adminService = new AdminService(adminRepository, userRepository);
 const adminController = new AdminController(adminService);
 
-adminRouter.post('/singup/', adminController.addAdmin);
-adminRouter.get('/searchForLoggedIn/', adminController.getAdmin);
+export const adminRoutes = (authMiddleware: AuthMiddleware) => {
+
+    const router = express.Router();
+
+    router.post('/singup/', adminController.addAdmin);
+
+    router.get('/searchForLoggedIn/', authMiddleware.authenticate, adminController.getAdmin);
+
+    return router;
+}

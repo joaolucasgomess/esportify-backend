@@ -1,20 +1,27 @@
 import { Router } from 'express';
-import { sportsComplexRouter } from './sportsComplex.router';
-import { adminRouter } from './admin.router';
-import { playerRouter } from './player.router';
-import { courtRouter } from './court.router';
+import { sportsComplexRoutes } from './sportsComplex.router';
+import { adminRoutes } from './admin.router';
+import { playerRoutes } from './player.router';
+import { courtRoutes } from './court.router';
 import { validCnpjRouter } from './validCnpj.router';
-import { slotsRouter } from './slots.route';
-import { bookingRouter } from './booking.router';
-import { userRouter } from './user.router';
+import { slotsRoutes } from './slots.route';
+import { bookingRoutes } from './booking.router';
+import { userRoutes } from './user.router';
+import { AuthMiddleware } from '../middlewares/auth.middleware';
+import { UserRepository } from '../repositories/implementations/user.repository';
+import { AdminRepository } from '../repositories/implementations/admin.repository';
 
 export const router = Router();
 
-router.use('/sportsComplex/', sportsComplexRouter);
-router.use('/admin/', adminRouter);
-router.use('/player/', playerRouter);
-router.use('/court/', courtRouter);
+const userRepository = new UserRepository();
+const adminRepository = new AdminRepository();
+const authMiddleware = new AuthMiddleware(userRepository, adminRepository);
+
+router.use('/sportsComplex/', sportsComplexRoutes());
+router.use('/admin/', adminRoutes(authMiddleware));
+router.use('/player/', playerRoutes(authMiddleware));
+router.use('/court/', courtRoutes(authMiddleware));
 router.use('/validCnpj/', validCnpjRouter);
-router.use("/slots/", slotsRouter);
-router.use("/booking/", bookingRouter);
-router.use("/user/", userRouter);
+router.use("/slots/", slotsRoutes(authMiddleware));
+router.use("/booking/", bookingRoutes(authMiddleware));
+router.use("/user/", userRoutes());

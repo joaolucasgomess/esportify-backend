@@ -1,34 +1,34 @@
 import { IPlayerRepository } from '../repositories/interfaces/player.repository.interface';
 import { CustomError } from '../utils/CustomError';
-import { Authenticator } from '../utils/Authenticator';
+import { Client } from '../db/schema';
 
 
 export class PlayerService {
     private playerRepository: IPlayerRepository;
-    private authenticator: Authenticator;
 
     constructor(playerRepository: IPlayerRepository){
         this.playerRepository = playerRepository;
-        this.authenticator = new Authenticator();
     }
 
-    getPlayer = async (token: string) => {
+    getPlayer = async (id: string): Promise<Client | undefined> => {
       try{
-        if(!token){
-          throw new CustomError('Token inexistente', 442);
-        }
 
-        const tokenData = this.authenticator.getTokenData(token);
-
-        if(!tokenData){
-            throw new CustomError('Token inválido', 401);
-        }
-
-        const player = this.playerRepository.selectPlayerById(tokenData.id);
-
-        return player;
+        return await this.playerRepository.selectPlayerById(id);
+        
       }catch(err: any){
         throw new CustomError(err.message, err.statusCode);
       }
+    }
+
+    async getPlayerById(id: string): Promise<Client | undefined>{
+        try{
+            if(!id){
+                throw new CustomError("id required.", 422);
+            }
+
+            return await this.playerRepository.selectPlayerById(id);
+        }catch(err: any){
+            throw new CustomError(err.message, err.statusCode);
+        }
     }
 }   

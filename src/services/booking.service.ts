@@ -1,6 +1,5 @@
 import { CustomError } from '../utils/CustomError';
 import { verifyFieldsToObject } from '../utils/VerifyFieldsToObject';
-import { Authenticator } from '../utils/Authenticator';
 import { generatedId } from '../utils/idGenerator';
 import { ISlotsRepository } from '../repositories/interfaces/slots.repository.interface';
 import { IBookingRepository } from '../repositories/interfaces/booking.repository.interface';
@@ -9,26 +8,15 @@ import { Booking, NewBooking } from '../db/schema';
 export class BookingService{
     private bookingRepository: IBookingRepository;
     private slotsRepository: ISlotsRepository;
-    private authenticator: Authenticator;
 
     constructor(bookingRepository: IBookingRepository, slotsRepository: ISlotsRepository){
         this.bookingRepository = bookingRepository;
         this.slotsRepository = slotsRepository;
-        this.authenticator = new Authenticator();
     }
 
     //TODO: descobrir como lidar com concorrencia e integrar metodo de pagamento
-    addBooking = async(token: string, newBooking: Omit<NewBooking, "id" | "userId">): Promise<void> => {
+    addBooking = async(newBooking: Omit<NewBooking, "id">): Promise<void> => {
         try{
-            if(!token){
-                throw new CustomError('Token inexistente', 442);
-            }
-    
-            const tokenData = this.authenticator.getTokenData(token);
-    
-            if(!tokenData){
-                throw new CustomError('Token inválido', 401);
-            }
 
             if(verifyFieldsToObject(newBooking) === false){
                 throw new CustomError('Campos inválidos', 422);
@@ -55,7 +43,7 @@ export class BookingService{
             const id = generatedId()
             await this.bookingRepository.inserBooking({
                 id,
-                userId: tokenData.id,
+                userId: newBooking.userId,
                 slotId: newBooking.slotId,
                 bookedDate: newBooking.bookedDate
             });
@@ -65,17 +53,8 @@ export class BookingService{
         }
     }
 
-    getBookingsByCourtId = async(token: string, courtId: string): Promise<Booking[]> => {
+    getBookingsByCourtId = async(courtId: string): Promise<Booking[]> => {
         try{
-            if(!token){
-                throw new CustomError('Token inexistente', 442);
-              }
-        
-              const tokenData = this.authenticator.getTokenData(token);
-        
-              if(!tokenData){
-                  throw new CustomError('Token inválido', 401);
-              }
         
               if(!courtId){
                   throw new CustomError('Campos inválidos', 422);

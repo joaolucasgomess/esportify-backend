@@ -1,33 +1,21 @@
 import { verifyFieldsToObject } from '../utils/VerifyFieldsToObject';
 import { CustomError } from '../utils/CustomError';
 import { generatedId } from '../utils/idGenerator';
-import { Authenticator } from '../utils/Authenticator';
-import { AvailableSlot, NewAvailableSlot } from '../db/schema';
+import { AvailableSlot, NewAvailableSlot, sportsComplexes } from '../db/schema';
 import { ISlotsRepository } from '../repositories/interfaces/slots.repository.interface';
 import { ICourtRepository } from '../repositories/interfaces/court.repository.interface';
 
 export class SlotsService{
     private slotsRepository: ISlotsRepository;
     private courtRepository: ICourtRepository;
-    private authenticator: Authenticator;
 
     constructor(slotsRepository: ISlotsRepository, courtRepository: ICourtRepository){
         this.slotsRepository = slotsRepository;
         this.courtRepository = courtRepository;
-        this.authenticator = new Authenticator();
     }
 
-    addAvailableSlot = async(token: string, newSlot: Omit<NewAvailableSlot, "id">): Promise<void> => {
+    addAvailableSlot = async(newSlot: Omit<NewAvailableSlot, "id">, sportsComplexId: string): Promise<void> => {
         try{
-            if(!token){
-                throw new CustomError('Token inexistente', 442);
-            }
-    
-            const tokenData = this.authenticator.getTokenData(token);
-    
-            if(!tokenData){
-                throw new CustomError('Token inválido', 401);
-            }
 
             if(verifyFieldsToObject(newSlot) === false){
                 throw new CustomError('Campos inválidos', 422) ;
@@ -53,7 +41,7 @@ export class SlotsService{
                 throw new CustomError('Quadra não encontrada', 404);
             }
 
-            if(court.sportsComplexId !== tokenData.idSportsComplex){
+            if(court.sportsComplexId !== sportsComplexId){
                 throw new CustomError('Complexo esportivo informado difere do logado', 403);
             }
 
@@ -87,17 +75,8 @@ export class SlotsService{
         }
     }
 
-    deleteSlot = async (token: string, slotId: string): Promise<void> => {
+    deleteSlot = async (slotId: string, sportsComplex: string): Promise<void> => {
         try{
-            if(!token){
-                throw new CustomError('Token inexistente', 442);
-            }
-    
-            const tokenData = this.authenticator.getTokenData(token);
-    
-            if(!tokenData){
-                throw new CustomError('Token inválido', 401);
-            }
 
             if(!slotId){
                 throw new CustomError('É preciso informar um id', 422);
@@ -111,7 +90,7 @@ export class SlotsService{
 
             const court = await this.courtRepository.selectCourtById(slotToDelete.courtId);
 
-            if(tokenData.idSportsComplex !== court.id){
+            if(sportsComplex !== court.id){
                 throw new CustomError('Usuário sem permissão para essa operação', 403);
             }
 
@@ -123,17 +102,8 @@ export class SlotsService{
         }
     }
 
-    alterSlotStatus = async(token: string, slotId: string): Promise<void> => {
+    alterSlotStatus = async(slotId: string): Promise<void> => {
         try{
-            if(!token){
-                throw new CustomError('Token inexistente', 442);
-            }
-
-            const tokenData = this.authenticator.getTokenData(token);
-
-            if(!tokenData){
-                throw new CustomError('Token inválido', 401);
-            }
 
             if(!slotId){
                 throw new CustomError('É preciso informar um id', 422);
@@ -154,17 +124,8 @@ export class SlotsService{
         }
     }
 
-    getSlotsByCourtId = async(token: string, courtId: string): Promise<AvailableSlot[]> => {
+    getSlotsByCourtId = async(courtId: string): Promise<AvailableSlot[]> => {
         try{
-            if(!token){
-                throw new CustomError('Token inexistente', 442);
-            }
-    
-            const tokenData = this.authenticator.getTokenData(token);
-    
-            if(!tokenData){
-                throw new CustomError('Token inválido', 401);
-            }
 
             if(!courtId){
                 throw new CustomError('Campos inválidos', 422);

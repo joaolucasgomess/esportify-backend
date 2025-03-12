@@ -16,8 +16,7 @@ export class AdminController {
 
     getAdmin = async (req: Request, res: Response): Promise<void> => {
       try{
-        const token = req.headers.authorization as string;
-        const admin = await this.adminService.getAdmin(token);
+        const admin = await this.adminService.getAdmin(req.authenticatedUser.userId);
         res.status(200).send({ admin });
       }catch(err: any){
         res.status(err.statusCode || 400).send({ error: err.message});

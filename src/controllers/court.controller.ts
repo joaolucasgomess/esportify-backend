@@ -6,9 +6,8 @@ export class CourtController {
 
     addCourt = async(req: Request, res: Response): Promise<void> => {
         try{
-            const token = req.headers.authorization as string;
             const { name, sportsComplexId } = req.body;
-            const newCourt = await this.courtService.addCourt(token, { name, sportsComplexId });
+            const newCourt = await this.courtService.addCourt({ name, sportsComplexId });
             res.status(201).send({ newCourt });
         }catch(err: any){
             res.status(err.statusCode || 400).send({ error: err.message});
@@ -17,9 +16,8 @@ export class CourtController {
 
     getCourts = async(req: Request, res: Response): Promise<void> => {
         try{
-            const token = req.headers.authorization as string;
             const querys = req.query as { name: string };
-            const courts = await this.courtService.getCourts(token, querys);
+            const courts = await this.courtService.getCourts(querys, req.authenticatedUser.sportsComplexId);
             res.status(200).send({ courts });
         }catch(err: any){
             res.status(err.statusCode || 400).send({ error: err.message});
@@ -28,9 +26,8 @@ export class CourtController {
 
     getCourtById = async(req: Request, res: Response): Promise<void> => {
         try{
-            const token = req.headers.authorization as string;
             const { courtId } = req.params;
-            const court = await this.courtService.getCourtById(token, courtId);
+            const court = await this.courtService.getCourtById(courtId, req.authenticatedUser.sportsComplexId);
             res.status(200).send({ court });
         }catch(err: any){
             res.status(err.statusCode || 400).send({ error: err.message});
