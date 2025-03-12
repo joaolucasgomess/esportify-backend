@@ -21,7 +21,7 @@ export const clients = pgTable("clients", {
 
 export const admins = pgTable("admins", {
   id: uuid().primaryKey(),
-  userId: uuid("uder_id").references(() => users.id),
+  userId: uuid("user_id").references(() => users.id).notNull(),
   sportsComplexId: uuid("sports_complex_id").references(() => sportsComplexes.id).notNull(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow().$onUpdate(() => new Date()).notNull()
@@ -59,7 +59,7 @@ export const courts = pgTable("courts", {
   updatedAt: timestamp("updated_at").defaultNow().$onUpdate(() => new Date()).notNull()
 });
 
-export const availableSlots = pgTable("availableSlots", {
+export const availableSlots = pgTable("available_slots", {
   id: uuid().primaryKey(),
   startTime: time("start_time").notNull(),
   endTime: time("end_time").notNull(),

@@ -1,10 +1,10 @@
-import express from 'express'
-import { SportsComplexController } from '../controllers/sportsComplex.controller'
-import { SportsComplexService } from '../services/sportsComplex.service'
-import SportsComplexRepository from '../repositories/implementations/sportsComplex.repository'
-import ValidCnpjService from '../services/validCnpj.service'
-import ValidCnpjRepository from '../repositories/implementations/validCnpj.repository'
-import { AddressRepository } from '../repositories/implementations/address.repository'
+import express from 'express';
+import { SportsComplexController } from '../controllers/sportsComplex.controller';
+import { SportsComplexService } from '../services/sportsComplex.service';
+import SportsComplexRepository from '../repositories/implementations/sportsComplex.repository';
+import ValidCnpjService from '../services/validCnpj.service';
+import ValidCnpjRepository from '../repositories/implementations/validCnpj.repository';
+import { AddressRepository } from '../repositories/implementations/address.repository';
 
 export const sportsComplexRouter = express.Router();
 

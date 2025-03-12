@@ -34,7 +34,13 @@ export class SlotsService{
             }
 
             if(newSlot.price <= 0){
-                throw new CustomError('O preço informado é menor ou igual a zero', 403);
+                throw new CustomError('O preço informado é menor ou igual a zero', 422);
+            }
+
+            const startDateConverted = new Date(newSlot.startDate);
+
+            if(startDateConverted < new Date()){
+                throw new CustomError("A data de inicio nao pode ser menor que a data atual.", 422);
             }
 
             if(![1,2,3,4,5,6,7].includes(newSlot.dayOfWeek)){
@@ -113,7 +119,7 @@ export class SlotsService{
 
             await this.slotsRepository.updateSlot(slotId, slotToDelete);
         }catch(err: any){
-            throw new CustomError(err.message, err.statusCode)
+            throw new CustomError(err.message, err.statusCode);
         }
     }
 
@@ -133,7 +139,7 @@ export class SlotsService{
                 throw new CustomError('É preciso informar um id', 422);
             }
 
-            const slot = await this.slotsRepository.selectSlotByIdCourt(slotId);
+            const slot = await this.slotsRepository.selectSlotById(slotId);
 
             if(!slot){
                 throw new CustomError('Nenhum horário encontrado', 404);
@@ -144,11 +150,11 @@ export class SlotsService{
             await this.slotsRepository.updateSlot(slotId, slot);
 
         }catch(err: any){
-            throw new CustomError(err.message, err.statusCode)
+            throw new CustomError(err.message, err.statusCode);
         }
     }
 
-    getSlotByIdCourt = async(token: string, courtId: string): Promise<AvailableSlot | undefined> => {
+    getSlotsByCourtId = async(token: string, courtId: string): Promise<AvailableSlot[]> => {
         try{
             if(!token){
                 throw new CustomError('Token inexistente', 442);
@@ -164,15 +170,15 @@ export class SlotsService{
                 throw new CustomError('Campos inválidos', 422);
             }
 
-            const timeByIdCourt = this.slotsRepository.selectSlotByIdCourt(courtId);
+            const slotsByIdCourt = await this.slotsRepository.selectSlotsByIdCourt(courtId);
 
-            if(!timeByIdCourt){
+            if(slotsByIdCourt.length === 0){
                 throw new CustomError('Quadra não possui horários cadastrados', 404);
             }
 
-            return timeByIdCourt;
+            return slotsByIdCourt;
         }catch(err: any){
-            throw new CustomError(err.message, err.statusCode)
+            throw new CustomError(err.message, err.statusCode);
         }
     }
 }

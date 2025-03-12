@@ -1,20 +1,39 @@
 import { NewAvailableSlot, AvailableSlot, availableSlots } from "../../db/schema";
 import { ISlotsRepository } from "../interfaces/slots.repository.interface";
 import { db } from "../../db";
-import { eq } from "drizzle-orm";
+import { eq, gte, lte, and, or, gt, lt } from "drizzle-orm";
 
 export class SlotsRepository implements ISlotsRepository{
 
     async findCoflictedSlots(data: Omit<NewAvailableSlot, "id" | "price">): Promise<AvailableSlot | undefined> {
-        //TODO:
-        // const [response] = await db
-        //     .select()
-        //     .from(availableSlots)
-        //     .where(
-        //         and(
-
-        //         )
-        //     );
+        const [response] = await db
+            .select()
+            .from(availableSlots)
+            .where(
+                and(
+                    eq(availableSlots.courtId, data.courtId),
+                    eq(availableSlots.dayOfWeek, data.dayOfWeek),
+                    and(
+                        lte(availableSlots.startDate, data.endTime),
+                        gte(availableSlots.endDate, data.startDate)
+                    ),
+                    or(
+                        and(
+                            lte(availableSlots.startTime, data.endTime),
+                            gt(availableSlots.endTime, data.startTime)
+                        ),
+                        and(
+                            lt(availableSlots.startTime, data.endTime),
+                            gte(availableSlots.endTime, data.startTime)
+                        ),
+                        and(
+                            gte(availableSlots.startTime, data.startTime),
+                            lte(availableSlots.endTime, data.endTime)
+                        )
+                    )
+                )
+            );
+        return response;
     }
 
     async insertAvailableSlot(newAvailableSlot: NewAvailableSlot): Promise<AvailableSlot> {
@@ -32,8 +51,7 @@ export class SlotsRepository implements ISlotsRepository{
         return response;
     }
 
-    async selectSlotByIdCourt(courtId: string): Promise<AvailableSlot | undefined> {
-        const [response] = await db.select().from(availableSlots).where(eq(availableSlots.courtId, courtId));
-        return response;
+    async selectSlotsByIdCourt(courtId: string): Promise<AvailableSlot[]> {
+        return await db.select().from(availableSlots).where(eq(availableSlots.courtId, courtId));
     }
 }

@@ -5,5 +5,5 @@ export interface ISlotsRepository{
     insertAvailableSlot(newAvailableSlot: NewAvailableSlot): Promise<AvailableSlot>;
     selectSlotById(id: string): Promise<AvailableSlot | undefined>;
     updateSlot(id: string, slot: Partial<Omit<AvailableSlot, "id" | "createdAt" | "updatedAt" | "courtId">>): Promise<AvailableSlot>;
-    selectSlotByIdCourt(courtId: string): Promise<AvailableSlot | undefined>;
+    selectSlotsByIdCourt(courtId: string): Promise<AvailableSlot[]>;
 }

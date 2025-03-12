@@ -6,12 +6,8 @@ import { Court, NewCourt } from '../../db/schema'
 
 export interface ICourtRepository{
     insertCourt(newCourt: NewCourt): Promise<Court>;
-    insertDateRent(id: string, idClient: string, newRent: TypeRentCourt): Promise<void>
-    selectCourtById(id: string): Promise<Court>;
-    selectCourtByNameAndIdSportsComplex(name: string, idSportsComplex: string): Promise<Court | undefined>;
-    selectCourtByIdSportsComplex(idSportsComplex: string): Promise<Quadra[]>
-    selectAllCourts(querys: {nome: string, locatario: string}): Promise<Quadra[]>
-    selectdayOfTheWeekById(id: string): Promise<DiaSemana>
-    selectDateRentByIdTimeAndDateRent(idTime: string, dateRent: string): Promise<DataAluguel>
-    selectRentByIdCourt(idCourt: string): Promise<any>
+    selectCourtById(id: string): Promise<Court | undefined>;
+    selectCourtByNameAndSportsComplexId(name: string, sportsComplexId: string): Promise<Court | undefined>;
+    selectCourtBySportsComplexId(SportsComplexId: string): Promise<Court[]>;
+    selectAllCourts(querys: { name: string }): Promise<Court[]>;
 }

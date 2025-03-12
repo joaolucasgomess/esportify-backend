@@ -1,0 +1,1 @@
+ALTER TABLE "admins" ALTER COLUMN "user_id" SET NOT NULL;

@@ -6,7 +6,7 @@ export class SlotsController {
 
     addAvailableSlots = async(req: Request, res: Response): Promise<void> => {
         try{
-            const token = req.headers.authorization as string
+            const token = req.headers.authorization as string;
             const { startTime, endTime, startDate, endDate, price, dayOfWeek, courtId } = req.body;
             await this.slotsService.addAvailableSlot(token, { startTime, endTime, startDate, endDate, price, dayOfWeek, courtId });
             res.status(201).send({ message: 'Horário adionado com sucesso!' });
@@ -37,11 +37,11 @@ export class SlotsController {
         }
     }
 
-    getTimeByIdCourt = async(req: Request, res: Response): Promise<void> => {
+    getSlotsByCourtId = async(req: Request, res: Response): Promise<void> => {
         try{
             const token = req.headers.authorization as string;
             const { courtId } = req.params;
-            const slots = await this.slotsService.getSlotByIdCourt(token, courtId);
+            const slots = await this.slotsService.getSlotsByCourtId(token, courtId);
             res.status(200).send({ slots });
         }catch(err: any){
             res.status(err.statusCode || 400).send({ error: err.message});

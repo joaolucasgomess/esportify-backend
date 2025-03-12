@@ -1,10 +1,10 @@
-import ValidCnpjRepository from "../repositories/implementations/validCnpj.repository";
+import { IValidCnpjRepository } from "../repositories/interfaces/validCnpj.repository.interface";
 import { CustomError } from "../utils/CustomError";
 
 export default class ValidCnpjService{
-  private validCnpjRepository: ValidCnpjRepository;
+  private validCnpjRepository: IValidCnpjRepository;
 
-  constructor(validCnpjRepository: ValidCnpjRepository){
+  constructor(validCnpjRepository: IValidCnpjRepository){
     this.validCnpjRepository = validCnpjRepository;
   }
 
@@ -29,7 +29,7 @@ export default class ValidCnpjService{
       return false;
 
     }catch(err: any){
-      throw new CustomError(err.message, err.statusCode)
+      throw new CustomError(err.message, err.statusCode);
     }
   }
 }

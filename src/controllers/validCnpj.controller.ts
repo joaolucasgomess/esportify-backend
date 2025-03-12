@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import { Request, Response } from 'express';
 import ValidCnpjService from '../services/validCnpj.service';
 
 export default class ValidCnpjController{
@@ -7,10 +7,10 @@ export default class ValidCnpjController{
   validCnpj = async(req: Request, res: Response): Promise<void> => {
     try{
       const { cnpj } = req.params
-      const isValid = await this.validCnpjService.validCnpj(cnpj)
-      res.status(200).send({ isValid: isValid })
+      const isValid = await this.validCnpjService.validCnpj(cnpj);
+      res.status(200).send({ isValid: isValid });
     }catch(err: any){
-      res.status(err.statusCode || 400).send({ error: err.message})
+      res.status(err.statusCode || 400).send({ error: err.message});
     }
   }
 }
