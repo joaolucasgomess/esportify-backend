@@ -14,12 +14,12 @@ export const bookingRoutes = (authMiddleware: AuthMiddleware) => {
 
     const router = express.Router();
 
-    router.use("/add/", 
+    router.post("/add/", 
         authMiddleware.authenticate,
         authMiddleware.authorize(["player"]),
         bookingController.addBooking
     );
-    router.use("/searchByCourtId/:courtId",
+    router.get("/searchByCourtId/:courtId",
         authMiddleware.authenticate,
         authMiddleware.authorize(["admin"]),
         bookingController.getBookingsByCourtId

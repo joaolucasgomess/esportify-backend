@@ -11,7 +11,10 @@ const playerController = new PlayerController(playerBusiness);
 export const playerRoutes = (authMiddleware: AuthMiddleware) => {
     const router = express.Router();
 
-    router.get('/searchForLoggedIn/', authMiddleware.authenticate, playerController.getPlayer);
+    router.get('/searchForLoggedIn/', 
+        authMiddleware.authenticate, 
+        playerController.getPlayer
+    );
 
     return router;
 }
