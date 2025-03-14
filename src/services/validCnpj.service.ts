@@ -1,35 +1,41 @@
 import { IValidCnpjRepository } from "../repositories/interfaces/validCnpj.repository.interface";
 import { CustomError } from "../utils/CustomError";
 
-export default class ValidCnpjService{
-  private validCnpjRepository: IValidCnpjRepository;
+export default class ValidCnpjService {
+	private validCnpjRepository: IValidCnpjRepository;
 
-  constructor(validCnpjRepository: IValidCnpjRepository){
-    this.validCnpjRepository = validCnpjRepository;
-  }
+	constructor(validCnpjRepository: IValidCnpjRepository) {
+		this.validCnpjRepository = validCnpjRepository;
+	}
 
-  validCnpj = async(cnpj: string): Promise<boolean> => {
-    try{
-      if(cnpj.length != 14){
-        throw new CustomError('Tamanho da string não representa um CNPJ.', 422);
-      }
-  
-      const cnpjInNumber = Number(cnpj);
-  
-      if(Number.isNaN(cnpjInNumber)){
-        throw new CustomError('CNPJ contem algum caracter que não é um número.', 400);
-      }
+	validCnpj = async (cnpj: string): Promise<boolean> => {
+		try {
+			if (cnpj.length != 14) {
+				throw new CustomError(
+					"Tamanho da string não representa um CNPJ.",
+					422,
+				);
+			}
 
-      const cnpjValid = await this.validCnpjRepository.validCnpjByCnpj(cnpj);
+			const cnpjInNumber = Number(cnpj);
 
-      if(cnpjValid.active && !cnpjValid.registered){
-          return true;
-      }
+			if (Number.isNaN(cnpjInNumber)) {
+				throw new CustomError(
+					"CNPJ contem algum caracter que não é um número.",
+					400,
+				);
+			}
 
-      return false;
+			const cnpjValid =
+				await this.validCnpjRepository.validCnpjByCnpj(cnpj);
 
-    }catch(err: any){
-      throw new CustomError(err.message, err.statusCode);
-    }
-  }
+			if (cnpjValid.active && !cnpjValid.registered) {
+				return true;
+			}
+
+			return false;
+		} catch (err: any) {
+			throw new CustomError(err.message, err.statusCode);
+		}
+	};
 }

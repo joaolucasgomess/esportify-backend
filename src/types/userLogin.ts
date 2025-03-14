@@ -1,5 +1,5 @@
 export type UserLogin = {
-    email: string,
-    password: string
-    sportsComplexId?: string
-}
+	email: string;
+	password: string;
+	sportsComplexId?: string;
+};

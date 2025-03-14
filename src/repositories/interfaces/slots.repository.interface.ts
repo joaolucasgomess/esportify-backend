@@ -1,9 +1,18 @@
 import { AvailableSlot, NewAvailableSlot } from "../../db/schema";
 
-export interface ISlotsRepository{
-    findCoflictedSlots(data: Omit<NewAvailableSlot,"id" | "price">): Promise<AvailableSlot | undefined>;
-    insertAvailableSlot(newAvailableSlot: NewAvailableSlot): Promise<AvailableSlot>;
-    selectSlotById(id: string): Promise<AvailableSlot | undefined>;
-    updateSlot(id: string, slot: Partial<Omit<AvailableSlot, "id" | "createdAt" | "updatedAt" | "courtId">>): Promise<AvailableSlot>;
-    selectSlotsByIdCourt(courtId: string): Promise<AvailableSlot[]>;
+export interface ISlotsRepository {
+	findCoflictedSlots(
+		data: Omit<NewAvailableSlot, "id" | "price">,
+	): Promise<AvailableSlot | undefined>;
+	insertAvailableSlot(
+		newAvailableSlot: NewAvailableSlot,
+	): Promise<AvailableSlot>;
+	selectSlotById(id: string): Promise<AvailableSlot | undefined>;
+	updateSlot(
+		id: string,
+		slot: Partial<
+			Omit<AvailableSlot, "id" | "createdAt" | "updatedAt" | "courtId">
+		>,
+	): Promise<AvailableSlot>;
+	selectSlotsByIdCourt(courtId: string): Promise<AvailableSlot[]>;
 }
