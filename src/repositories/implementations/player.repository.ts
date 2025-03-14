@@ -4,11 +4,11 @@ import { db } from "../../db";
 import { eq } from "drizzle-orm";
 
 export default class PlayerRepository implements IPlayerRepository {
-	selectPlayerById = async (id: string): Promise<Client | undefined> => {
-		const [response] = await db
-			.select()
-			.from(clients)
-			.where(eq(clients.id, id));
-		return response;
-	};
+    selectPlayerById = async (id: string): Promise<Client | undefined> => {
+        const [response] = await db
+            .select()
+            .from(clients)
+            .where(eq(clients.id, id));
+        return response;
+    };
 }

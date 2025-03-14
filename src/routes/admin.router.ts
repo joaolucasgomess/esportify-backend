@@ -11,15 +11,15 @@ const adminService = new AdminService(adminRepository, userRepository);
 const adminController = new AdminController(adminService);
 
 export const adminRoutes = (authMiddleware: AuthMiddleware) => {
-	const router = express.Router();
+    const router = express.Router();
 
-	router.post("/singup/", adminController.addAdmin);
+    router.post("/singup/", adminController.addAdmin);
 
-	router.get(
-		"/searchForLoggedIn/",
-		authMiddleware.authenticate,
-		adminController.getAdmin,
-	);
+    router.get(
+        "/searchForLoggedIn/",
+        authMiddleware.authenticate,
+        adminController.getAdmin,
+    );
 
-	return router;
+    return router;
 };

@@ -11,17 +11,17 @@ const adminRepository = new AdminRepository();
 const playerRepository = new PlayerRepository();
 const sportsComplexRepository = new SportsComplexRepository();
 const userService = new UserService(
-	userRepository,
-	adminRepository,
-	playerRepository,
-	sportsComplexRepository,
+    userRepository,
+    adminRepository,
+    playerRepository,
+    sportsComplexRepository,
 );
 const userController = new UserController(userService);
 
 export const userRoutes = () => {
-	const router = express.Router();
+    const router = express.Router();
 
-	router.post("/login/", userController.login);
+    router.post("/login/", userController.login);
 
-	return router;
+    return router;
 };

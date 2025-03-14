@@ -11,18 +11,16 @@ const validCnpjRepository = new ValidCnpjRepository();
 const addressRepository = new AddressRepository();
 const validCnpjBusiness = new ValidCnpjService(validCnpjRepository);
 const sportsComplexService = new SportsComplexService(
-	sportsComplexRepository,
-	addressRepository,
-	validCnpjBusiness,
+    sportsComplexRepository,
+    addressRepository,
+    validCnpjBusiness,
 );
-const sportsComplexController = new SportsComplexController(
-	sportsComplexService,
-);
+const sportsComplexController = new SportsComplexController(sportsComplexService);
 
 export const sportsComplexRoutes = () => {
-	const router = express.Router();
+    const router = express.Router();
 
-	router.post("/add/", sportsComplexController.addSportsComplex);
+    router.post("/add/", sportsComplexController.addSportsComplex);
 
-	return router;
+    return router;
 };
