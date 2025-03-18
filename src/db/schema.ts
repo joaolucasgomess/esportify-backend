@@ -59,7 +59,7 @@ export const address = pgTable("address", {
     complement: varchar(),
     number: integer().notNull(),
     state: varchar().notNull(),
-    zipCode: varchar("zip_code", { length: 8 }).notNull(),
+    zipCode: varchar("zip_code", { length: 9 }).notNull(),
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at")
         .defaultNow()

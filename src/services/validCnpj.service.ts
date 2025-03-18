@@ -10,7 +10,7 @@ export default class ValidCnpjService {
 
     validCnpj = async (cnpj: string): Promise<boolean> => {
         try {
-            if (cnpj.length != 14) {
+            if (cnpj.length !== 14) {
                 throw new CustomError("Tamanho da string não representa um CNPJ.", 422);
             }
 
@@ -23,7 +23,11 @@ export default class ValidCnpjService {
                 );
             }
 
-            const cnpjValid = await this.validCnpjRepository.validCnpjByCnpj(cnpj);
+            const cnpjValid = await this.validCnpjRepository.selectCnpjByCnpj(cnpj);
+
+            if (!cnpjValid) {
+                throw new CustomError("Cnpj não encontrado", 404);
+            }
 
             if (cnpjValid.active && !cnpjValid.registered) {
                 return true;

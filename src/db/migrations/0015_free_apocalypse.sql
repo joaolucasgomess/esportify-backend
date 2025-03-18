@@ -1,0 +1,1 @@
+ALTER TABLE "address" ALTER COLUMN "zip_code" SET DATA TYPE varchar(9);

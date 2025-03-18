@@ -10,18 +10,18 @@ export const pool = new Pool({
 export const db = drizzle({ client: pool, schema: schema });
 
 // async function main() {
-//   const cnpjValid1: typeof cnpjValidTable.$inferInsert = {
-//     id: generatedId(),
-//     cnpj: '11111111111111'
-//   };
+//     const cnpjValid1: typeof cnpjValid.$inferInsert = {
+//         id: generatedId(),
+//         cnpj: "11111111111111",
+//     };
 
-//   const cnpjValid2: typeof cnpjValidTable.$inferInsert = {
-//     id: generatedId(),
-//     cnpj: '22222222222222'
-//   };
+//     const cnpjValid2: typeof cnpjValid.$inferInsert = {
+//         id: generatedId(),
+//         cnpj: "22222222222222",
+//     };
 
-//   await db.insert(cnpjValidTable).values(cnpjValid1);
-//   await db.insert(cnpjValidTable).values(cnpjValid2);
+//     await db.insert(cnpjValid).values(cnpjValid1);
+//     await db.insert(cnpjValid).values(cnpjValid2);
 // }
 
 // main();
