@@ -64,6 +64,10 @@ export class SportsComplexService {
                 addressId: address.id,
             });
 
+            validCnpj.registered = true;
+
+            await this.validCnpjBusiness.updateValidCnpj(validCnpj.id, validCnpj);
+
             return sportsComplex;
         } catch (err: any) {
             throw new CustomError(err.message, err.statusCode);

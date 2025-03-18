@@ -12,4 +12,17 @@ export default class ValidCnpjRepository implements IValidCnpjRepository {
 
         return response;
     };
+
+    async updateCnpjValid(
+        id: string,
+        toUpdatecnpjValid: Partial<CnpjValid>,
+    ): Promise<CnpjValid> {
+        const [response] = await db
+            .update(cnpjValid)
+            .set(toUpdatecnpjValid)
+            .where(eq(cnpjValid.id, id))
+            .returning();
+
+        return response;
+    }
 }

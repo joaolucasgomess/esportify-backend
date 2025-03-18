@@ -1,3 +1,4 @@
+import { CnpjValid } from "../db/schema";
 import { IValidCnpjRepository } from "../repositories/interfaces/validCnpj.repository.interface";
 import { CustomError } from "../utils/CustomError";
 
@@ -8,7 +9,7 @@ export default class ValidCnpjService {
         this.validCnpjRepository = validCnpjRepository;
     }
 
-    validCnpj = async (cnpj: string): Promise<boolean> => {
+    validCnpj = async (cnpj: string): Promise<CnpjValid | undefined> => {
         try {
             if (cnpj.length !== 14) {
                 throw new CustomError("Tamanho da string não representa um CNPJ.", 422);
@@ -30,10 +31,26 @@ export default class ValidCnpjService {
             }
 
             if (cnpjValid.active && !cnpjValid.registered) {
-                return true;
+                return cnpjValid;
             }
 
-            return false;
+            return undefined;
+        } catch (err: any) {
+            throw new CustomError(err.message, err.statusCode);
+        }
+    };
+
+    updateValidCnpj = async (
+        id: string,
+        cnpjValid: Partial<CnpjValid>,
+    ): Promise<CnpjValid> => {
+        try {
+            const updatedValidCnpj = await this.validCnpjRepository.updateCnpjValid(
+                id,
+                cnpjValid,
+            );
+
+            return updatedValidCnpj;
         } catch (err: any) {
             throw new CustomError(err.message, err.statusCode);
         }

@@ -11,20 +11,12 @@ export class BookingRepository implements IBookingRepository {
         const [response] = await db
             .select()
             .from(bookings)
-            .where(
-                and(
-                    eq(bookings.slotId, slotId),
-                    eq(bookings.bookedDate, bookedDate),
-                ),
-            );
+            .where(and(eq(bookings.slotId, slotId), eq(bookings.bookedDate, bookedDate)));
         return response;
     }
 
     async inserBooking(newBooking: NewBooking): Promise<Booking> {
-        const [response] = await db
-            .insert(bookings)
-            .values(newBooking)
-            .returning();
+        const [response] = await db.insert(bookings).values(newBooking).returning();
         return response;
     }
 

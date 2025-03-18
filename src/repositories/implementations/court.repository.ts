@@ -10,10 +10,7 @@ export default class CourtRepository implements ICourtRepository {
     };
 
     selectCourtById = async (id: string): Promise<Court> => {
-        const [response] = await db
-            .select()
-            .from(courts)
-            .where(eq(courts.id, id));
+        const [response] = await db.select().from(courts).where(eq(courts.id, id));
         return response;
     };
 
@@ -28,9 +25,7 @@ export default class CourtRepository implements ICourtRepository {
         return response;
     };
 
-    selectCourtBySportsComplexId = async (
-        sportsComplexId: string,
-    ): Promise<Court[]> => {
+    selectCourtBySportsComplexId = async (sportsComplexId: string): Promise<Court[]> => {
         return db
             .select()
             .from(courts)
