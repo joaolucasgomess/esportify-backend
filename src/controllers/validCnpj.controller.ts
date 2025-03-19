@@ -8,7 +8,7 @@ export default class ValidCnpjController {
         try {
             const { cnpj } = req.params;
             const isValid = await this.validCnpjService.validCnpj(cnpj);
-            res.status(200).send({ isValid: isValid });
+            res.status(200).send({ isValid });
         } catch (err: any) {
             res.status(err.statusCode || 400).send({ error: err.message });
         }

@@ -32,16 +32,18 @@ export class SportsComplexService {
 
             newSportsComplex.number = Number(newSportsComplex.number);
 
-            const validCnpj = await this.validCnpjBusiness.validCnpj(
-                newSportsComplex.cnpj,
-            );
+            const isValid = await this.validCnpjBusiness.validCnpj(newSportsComplex.cnpj);
 
-            if (!validCnpj) {
+            if (!isValid) {
                 throw new CustomError(
                     "Cnpj informado ainda não possui acesso ao nosso sistema ou já esta cadastrado",
                     403,
                 );
             }
+
+            const cnpjValid = await this.validCnpjBusiness.getCnpjForCnpj(
+                newSportsComplex.cnpj,
+            );
 
             const addressId = generatedId();
 
@@ -64,9 +66,9 @@ export class SportsComplexService {
                 addressId: address.id,
             });
 
-            validCnpj.registered = true;
+            cnpjValid.registered = true;
 
-            await this.validCnpjBusiness.updateValidCnpj(validCnpj.id, validCnpj);
+            await this.validCnpjBusiness.updateValidCnpj(cnpjValid.id, cnpjValid);
 
             return sportsComplex;
         } catch (err: any) {
