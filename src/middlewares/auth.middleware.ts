@@ -1,24 +1,33 @@
 import { Request, Response, NextFunction } from "express";
 import { IUserRepository } from "../repositories/interfaces/user.repository.interface";
 import { IAdminRepository } from "../repositories/interfaces/admin.respository.interface";
-import jwt from "jsonwebtoken";
+import * as jwt from "jsonwebtoken";
 import "dotenv/config";
 
 declare global {
     namespace Express {
         interface Request {
-            authenticatedUser?: AuthenticatedUser;
+            authenticatedUser: AuthenticatedUser;
         }
     }
 }
 
 export class AuthMiddleware {
-    constructor(
-        private userRepository: IUserRepository,
-        private adminRepository: IAdminRepository,
-    ) {}
+    private userRepository: IUserRepository;
+    private adminRepository: IAdminRepository;
+    private test: string;
 
-    async authenticate(req: Request, res: Response, next: NextFunction): Promise<void> {
+    constructor(userRepository: IUserRepository, adminRepository: IAdminRepository) {
+        this.userRepository = userRepository;
+        this.adminRepository = adminRepository;
+        this.test = "pintuc";
+    }
+
+    authenticate = async (
+        req: Request,
+        res: Response,
+        next: NextFunction,
+    ): Promise<void> => {
         const token = req.headers.authorization;
 
         if (!token) {
@@ -53,9 +62,9 @@ export class AuthMiddleware {
 
             res.status(401).send({ message: "Invalid token." });
         }
-    }
+    };
 
-    authorize(roles: string[]) {
+    authorize = (roles: string[]) => {
         return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
             const user = req.authenticatedUser;
 
@@ -90,10 +99,10 @@ export class AuthMiddleware {
                 res.status(500).send({ message: err.message });
             }
         };
-    }
+    };
 }
 
-interface AuthenticationData {
+export interface AuthenticationData {
     userId: string;
 }
 

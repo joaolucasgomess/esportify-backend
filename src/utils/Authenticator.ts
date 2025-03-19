@@ -1,5 +1,6 @@
 import * as jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { AuthenticationData } from "../middlewares/auth.middleware";
 
 dotenv.config();
 
@@ -9,9 +10,4 @@ export class Authenticator {
             expiresIn: "59min",
         });
     };
-}
-
-export interface AuthenticationData {
-    id: string;
-    idSportsComplex?: string;
 }

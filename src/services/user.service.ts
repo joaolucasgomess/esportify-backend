@@ -74,8 +74,7 @@ export class UserService {
                 }
 
                 const token = this.authenticator.generateToken({
-                    id: userByEmail.id,
-                    idSportsComplex: adminById.sportsComplexId,
+                    userId: userByEmail.id,
                 });
                 return token;
             }
@@ -102,7 +101,7 @@ export class UserService {
                 }
 
                 const token = this.authenticator.generateToken({
-                    id: userByEmail.id,
+                    userId: userByEmail.id,
                 });
                 return token;
             }
@@ -113,15 +112,15 @@ export class UserService {
         }
     };
 
-    async getUserById(id: string): Promise<Omit<User, "password">> {
+    getUserById = async (id: string): Promise<Omit<User, "password">> => {
         try {
             if (!id) {
                 throw new CustomError("userId required", 422);
             }
 
-            return this.userRepository.selectUserById(id);
+            return await this.userRepository.selectUserById(id);
         } catch (err: any) {
             throw new CustomError(err.message, err.statusCode);
         }
-    }
+    };
 }
