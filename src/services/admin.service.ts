@@ -8,16 +8,23 @@ import { HashManager } from "../utils/HashManager";
 import { validateEmail, validadePassWord } from "../utils/ValidateRegex";
 import { IUserRepository } from "../repositories/interfaces/user.repository.interface";
 import { Admin } from "../db/schema";
+import { ISportsComplexRepository } from "../repositories/interfaces/sportsComplex.repository.interface";
 
 export class AdminService {
     private adminRepository: IAdminRepository;
     private userRepository: IUserRepository;
+    private sportsComplexRepository: ISportsComplexRepository;
     private authenticator: Authenticator;
     private hashManager: HashManager;
 
-    constructor(adminRepository: IAdminRepository, userRepository: IUserRepository) {
+    constructor(
+        adminRepository: IAdminRepository,
+        userRepository: IUserRepository,
+        sportsComplexRepository: ISportsComplexRepository,
+    ) {
         this.adminRepository = adminRepository;
         this.userRepository = userRepository;
+        this.sportsComplexRepository = sportsComplexRepository;
         this.authenticator = new Authenticator();
         this.hashManager = new HashManager();
     }
@@ -45,6 +52,15 @@ export class AdminService {
                 throw new CustomError("Email informado já cadastrado em nossa base", 422);
             }
 
+            const sportsComplex =
+                await this.sportsComplexRepository.selectSportsComplexById(
+                    newUserAdmin.sportsComplexId,
+                );
+
+            if (!sportsComplex) {
+                throw new CustomError("Complexo esportivo nao econtrado.", 404);
+            }
+
             const id = generatedId();
 
             const hashedPassword = await this.hashManager.hash(newUserAdmin.password);
@@ -63,7 +79,7 @@ export class AdminService {
                 sportsComplexId: newUserAdmin.sportsComplexId,
             });
 
-            const token = this.authenticator.generateToken({ id });
+            const token = this.authenticator.generateToken({ userId: id });
             return token;
         } catch (err: any) {
             throw new CustomError(err.message, err.statusCode);
