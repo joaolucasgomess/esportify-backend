@@ -28,11 +28,8 @@ export class SlotsController {
 
     deleteSlot = async (req: Request, res: Response): Promise<void> => {
         try {
-            const { slotId } = req.params;
-            await this.slotsService.deleteSlot(
-                slotId,
-                req.authenticatedUser.sportsComplexId,
-            );
+            const { id } = req.params;
+            await this.slotsService.deleteSlot(id, req.authenticatedUser.sportsComplexId);
             res.status(200).send({ message: "Horário deletado com sucesso." });
         } catch (err: any) {
             res.status(err.statusCode || 400).send({ error: err.message });
@@ -41,8 +38,8 @@ export class SlotsController {
 
     alterSlotStatus = async (req: Request, res: Response): Promise<void> => {
         try {
-            const { slotId } = req.params;
-            await this.slotsService.alterSlotStatus(slotId);
+            const { id } = req.params;
+            await this.slotsService.alterSlotStatus(id);
             res.status(200).send({
                 message: "status do horário atualizado com sucesso",
             });

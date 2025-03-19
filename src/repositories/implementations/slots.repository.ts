@@ -1,7 +1,7 @@
 import { NewAvailableSlot, AvailableSlot, availableSlots } from "../../db/schema";
 import { ISlotsRepository } from "../interfaces/slots.repository.interface";
 import { db } from "../../db";
-import { eq, gte, lte, and, or, gt, lt } from "drizzle-orm";
+import { eq, gte, lte, and, or, gt, lt, isNull } from "drizzle-orm";
 
 export class SlotsRepository implements ISlotsRepository {
     async findCoflictedSlots(
@@ -15,7 +15,7 @@ export class SlotsRepository implements ISlotsRepository {
                     eq(availableSlots.courtId, data.courtId),
                     eq(availableSlots.dayOfWeek, data.dayOfWeek),
                     and(
-                        lte(availableSlots.startDate, data.endTime),
+                        lte(availableSlots.startDate, data.endDate),
                         gte(availableSlots.endDate, data.startDate),
                     ),
                     or(
@@ -51,7 +51,8 @@ export class SlotsRepository implements ISlotsRepository {
         const [response] = await db
             .select()
             .from(availableSlots)
-            .where(eq(availableSlots.id, id));
+            .where(and(eq(availableSlots.id, id), isNull(availableSlots.deleted)));
+
         return response;
     }
 
@@ -71,6 +72,8 @@ export class SlotsRepository implements ISlotsRepository {
         return await db
             .select()
             .from(availableSlots)
-            .where(eq(availableSlots.courtId, courtId));
+            .where(
+                and(eq(availableSlots.courtId, courtId), isNull(availableSlots.deleted)),
+            );
     }
 }

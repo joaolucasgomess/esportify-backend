@@ -28,13 +28,25 @@ export class SlotsService {
             }
 
             const startDateConverted = new Date(newSlot.startDate);
+            const dateNowString = new Date().toISOString().split("T")[0];
+            const dateNow = new Date(dateNowString);
 
-            if (startDateConverted < new Date()) {
+            if (startDateConverted < dateNow) {
                 throw new CustomError(
                     "A data de inicio nao pode ser menor que a data atual.",
                     422,
                 );
             }
+
+            const entDateConverted = new Date(newSlot.endDate);
+
+            if (entDateConverted < startDateConverted) {
+                throw new CustomError(
+                    "Date de encerramento nao pode ser menor que a de inicio",
+                    403,
+                );
+            }
+            //TODO: converter e validar se horario final maior que inicial
 
             if (![1, 2, 3, 4, 5, 6, 7].includes(newSlot.dayOfWeek)) {
                 throw new CustomError("Dia da semana não encontrado", 404);
@@ -101,10 +113,11 @@ export class SlotsService {
                 slotToDelete.courtId,
             );
 
-            if (sportsComplex !== court.id) {
+            if (sportsComplex !== court.sportsComplexId) {
                 throw new CustomError("Usuário sem permissão para essa operação", 403);
             }
 
+            //TODO: ajustar o timezone
             slotToDelete.deleted = new Date();
 
             await this.slotsRepository.updateSlot(slotId, slotToDelete);
@@ -124,6 +137,8 @@ export class SlotsService {
             if (!slot) {
                 throw new CustomError("Nenhum horário encontrado", 404);
             }
+
+            slot.active = !slot.active;
 
             //TODO: criar um metodo pra validar a conexão do horario, quadra e complexo esportivo
 

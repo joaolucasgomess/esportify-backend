@@ -20,7 +20,7 @@ export const slotsRoutes = (authMiddleware: AuthMiddleware) => {
         slotsController.addAvailableSlots,
     );
     router.put(
-        "alterStatus/:id/",
+        "/alterStatus/:id/",
         authMiddleware.authenticate,
         authMiddleware.authorize(["admin"]),
         slotsController.alterSlotStatus,
