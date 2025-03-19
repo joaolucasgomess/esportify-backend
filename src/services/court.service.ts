@@ -37,6 +37,7 @@ export class CourtService {
                 name: newCourt.name,
                 sportsComplexId: newCourt.sportsComplexId,
             });
+
             return court;
         } catch (err: any) {
             throw new CustomError(err.message, err.statusCode);
@@ -48,7 +49,7 @@ export class CourtService {
         sportsComplexId?: string,
     ): Promise<Court[]> => {
         try {
-            if (sportsComplexId) {
+            if (sportsComplexId.trim()) {
                 const courtsBySportsComplex =
                     await this.courtRepository.selectCourtBySportsComplexId(
                         sportsComplexId,
