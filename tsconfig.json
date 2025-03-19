@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es6",
-    "module": "commonjs",
+    "lib": ["ES2023"],
+    "module": "node16",
+    "target": "ES2023",
     "rootDir": "./src",
     "sourceMap": true,
     "outDir": "./build",
@@ -10,7 +11,8 @@
     "noImplicitAny": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "skipLibCheck": true //isso ta aqui por causa de um bug do drizzle-orm (https://github.com/drizzle-team/drizzle-orm/issues/3617)
+    //assim que resolver, tirar essa bomba
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"]
 }
