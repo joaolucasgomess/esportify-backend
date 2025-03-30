@@ -45,68 +45,19 @@ export class UserService {
                 throw new CustomError("Usuário ainda não cadastrado", 404);
             }
 
-            const adminById = await this.adminRepository.selectAdminById(userByEmail.id);
-
-            if (adminById) {
-                if (!userLogin.sportsComplexId.trim()) {
-                    throw new CustomError("Infome a unidade.", 403);
-                }
-
-                const sportsComplexById =
-                    await this.sportsComplexRepository.selectSportsComplexById(
-                        adminById.sportsComplexId,
-                    );
-
-                if (
-                    !sportsComplexById ||
-                    sportsComplexById.id !== userLogin.sportsComplexId
-                ) {
-                    throw new CustomError("sportsComplexId inválido.", 401);
-                }
-
-                const passwordIsCorrect = await this.hashManager.compare(
-                    userLogin.password,
-                    userByEmail.password,
-                );
-
-                if (!passwordIsCorrect) {
-                    throw new CustomError("Senha incorreta", 401);
-                }
-
-                const token = this.authenticator.generateToken({
-                    userId: userByEmail.id,
-                });
-                return token;
-            }
-
-            const playerById = await this.playerRepository.selectPlayerById(
-                userByEmail.id,
+            const passwordIsCorrect = await this.hashManager.compare(
+                userLogin.password,
+                userByEmail.password,
             );
 
-            if (playerById) {
-                if (userLogin.sportsComplexId.trim()) {
-                    throw new CustomError(
-                        "Voce precisa ser administrador para acessar essa area.",
-                        403,
-                    );
-                }
-
-                const passwordIsCorrect = await this.hashManager.compare(
-                    userLogin.password,
-                    userByEmail.password,
-                );
-
-                if (!passwordIsCorrect) {
-                    throw new CustomError("Senha incorreta", 401);
-                }
-
-                const token = this.authenticator.generateToken({
-                    userId: userByEmail.id,
-                });
-                return token;
+            if (!passwordIsCorrect) {
+                throw new CustomError("Senha incorreta", 401);
             }
 
-            throw new CustomError("Erro inesperado", 400);
+            const token = this.authenticator.generateToken({
+                userId: userByEmail.id,
+            });
+            return token;
         } catch (err: any) {
             throw new CustomError(err.message, err.statusCode);
         }

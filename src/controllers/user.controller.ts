@@ -6,11 +6,10 @@ export class UserController {
 
     login = async (req: Request, res: Response): Promise<void> => {
         try {
-            const { email, password, sportsComplexId } = req.body;
+            const { email, password } = req.body;
             const token = await this.userService.login({
                 email,
                 password,
-                sportsComplexId,
             });
             res.status(200).send({ token });
         } catch (err) {
